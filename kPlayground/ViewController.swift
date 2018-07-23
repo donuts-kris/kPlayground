@@ -52,7 +52,7 @@ class ViewController : UIViewController {
 }
 
 extension ViewController {
-    enum LogInfo : String, CustomStringConvertible {
+    private enum LogInfo : String, CustomStringConvertible {
         case initialize, deinitialize, viewDidLoad, viewWillAppear, viewDidAppear, viewWillDisappear, viewDidDisappear
         
         var selector : Selector? {
