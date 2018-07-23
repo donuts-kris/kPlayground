@@ -19,14 +19,69 @@ class FirstViewController: ViewController {
         return button
     }()
     
-    @objc func buttonClicked() {
+    private var captureSession = AVCaptureSession()
+    
+    private var currentCamera : AVCaptureDevice?
+    private var rearCamera : AVCaptureDevice?
+    private var frontCamera : AVCaptureDevice?
+    
+    private var photoOutput = AVCapturePhotoOutput()
+
+    private var cameraPreviewLayer : AVCaptureVideoPreviewLayer?
+    
+    @objc private func buttonClicked() {
         navigateToSecondVC()
     }
     
-    func navigateToSecondVC() {
+    private func navigateToSecondVC() {
         let vc = SecondViewController()
         
         self.navigationController!.pushViewController(vc, animated: true)
+    }
+    
+    private func setupCaptureSession() {
+        captureSession.sessionPreset = AVCaptureSession.Preset.photo
+    }
+    
+    private func setupDevice(){
+        let deviceDiscoverySession = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInWideAngleCamera], mediaType: .video, position: .unspecified)
+        
+        let devices = deviceDiscoverySession.devices
+        
+        devices.forEach { device in
+            if device.position == .back {
+                rearCamera = device
+            }
+            else if device.position == .front {
+                frontCamera = device
+            }
+            
+            currentCamera = rearCamera
+        }
+    }
+    
+    private func setupInputOutput(){
+        do {
+            let captureDeviceInput = try AVCaptureDeviceInput(device: currentCamera!)
+            captureSession.addInput(captureDeviceInput)
+            photoOutput.setPreparedPhotoSettingsArray([AVCapturePhotoSettings(format: [AVVideoCodecKey: AVVideoCodecType.jpeg])], completionHandler: nil)
+            captureSession.addOutput(photoOutput)
+        }
+        catch {
+            print(error)
+        }
+    }
+    
+    private func setupPreviewLayer(){
+        cameraPreviewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
+        cameraPreviewLayer?.videoGravity = .resizeAspectFill
+        cameraPreviewLayer?.connection?.videoOrientation = .portrait
+        cameraPreviewLayer?.frame = self.view.frame
+        self.view.layer.insertSublayer(cameraPreviewLayer!, at: 0)
+    }
+    
+    private func startRunningCaptureSession(){
+        captureSession.startRunning()
     }
 }
 
@@ -41,5 +96,11 @@ extension FirstViewController {
             make.centerX.equalToSuperview()
             make.bottom.equalToSuperview().offset(-30)
         }
+        
+        setupCaptureSession()
+        setupDevice()
+        setupInputOutput()
+        setupPreviewLayer()
+        startRunningCaptureSession()
     }
 }
