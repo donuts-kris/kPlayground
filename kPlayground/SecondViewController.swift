@@ -10,13 +10,12 @@ import UIKit
 
 class SecondViewController: ViewController {
 
+}
+
+extension SecondViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         self.view.backgroundColor = UIColor.white
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
     }
 }
