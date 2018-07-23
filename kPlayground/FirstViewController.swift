@@ -19,6 +19,18 @@ class FirstViewController: ViewController {
         return button
     }()
     
+    @objc func buttonClicked() {
+        navigateToSecondVC()
+    }
+    
+    func navigateToSecondVC() {
+        let vc = SecondViewController()
+        
+        self.navigationController!.pushViewController(vc, animated: true)
+    }
+}
+
+extension FirstViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -29,15 +41,5 @@ class FirstViewController: ViewController {
             make.centerX.equalToSuperview()
             make.bottom.equalToSuperview().offset(-30)
         }
-    }
-    
-    @objc func buttonClicked() {
-        navigateToSecondVC()
-    }
-    
-    func navigateToSecondVC() {
-        let vc = SecondViewController()
-        
-        self.navigationController!.pushViewController(vc, animated: true)
     }
 }
