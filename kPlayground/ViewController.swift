@@ -7,8 +7,6 @@
 //
 
 import UIKit
-import AVFoundation
-import SnapKit
 import ReactiveCocoa
 import ReactiveSwift
 

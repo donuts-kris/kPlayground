@@ -34,7 +34,6 @@ class FirstViewController: ViewController {
         navigateToSecondVC()
     }
     
-    
     func navigateToSecondVC() {
         let vc = SecondViewController()
         
