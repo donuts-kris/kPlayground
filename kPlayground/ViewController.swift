@@ -14,7 +14,7 @@ import ReactiveSwift
 
 class ViewController: UIViewController {
     
-    enum LogLevel : String, CustomStringConvertible {
+    enum LogInfo : String, CustomStringConvertible {
         case initialize, deinitialize, viewDidLoad, viewWillAppear, viewDidAppear, viewWillDisappear, viewDidDisappear
         
         var selector : Selector? {
@@ -51,18 +51,18 @@ class ViewController: UIViewController {
         }
     }
     
-    static let LOG_LEVEL : [LogLevel] = [.initialize, .viewWillAppear, .deinitialize]
+    static let LOG_INFO : [LogInfo] = [.initialize, .viewWillAppear, .deinitialize]
     
     var disposable = CompositeDisposable()
     
     convenience init() {
         self.init(nibName:nil, bundle:nil)
 
-        if let initialize = ViewController.LOG_LEVEL.first(where: {$0 == .initialize}) {
+        if let initialize = ViewController.LOG_INFO.first(where: {$0 == .initialize}) {
             print("\(String(describing: self)) \(String(describing: initialize))")
         }
 
-        ViewController.LOG_LEVEL.forEach { x in
+        ViewController.LOG_INFO.forEach { x in
             if let selector = x.selector {
                 self.disposable += self.reactive.signal(for: selector).observeValues { [weak self] _ in
                     guard let sSelf = self else { return }
@@ -85,7 +85,7 @@ class ViewController: UIViewController {
     }
     
     deinit {
-        if let deinitialize = ViewController.LOG_LEVEL.first(where: {$0 == .deinitialize}) {
+        if let deinitialize = ViewController.LOG_INFO.first(where: {$0 == .deinitialize}) {
             print("\(String(describing: self)) \(String(describing: deinitialize))")
         }
         
