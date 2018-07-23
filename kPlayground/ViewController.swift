@@ -11,30 +11,69 @@ import SnapKit
 import ReactiveCocoa
 import ReactiveSwift
 
-class ViewController: UIViewController {
+class ViewController : UIViewController {
     
+    static let LOG_INFO : [LogInfo] = [.initialize, .viewWillAppear, .deinitialize]
+    
+    internal var disposable = CompositeDisposable()
+    
+    internal var longDescription : String {
+        return super.description
+    }
+    
+    internal var shortDescription : String {
+        return "<\(String(describing: type(of: self)))>"
+    }
+    
+    convenience init() {
+        self.init(nibName:nil, bundle:nil)
+        
+        if let initialize = ViewController.LOG_INFO.first(where: {$0 == .initialize}) {
+            print("\(String(describing: self)) \(String(describing: initialize))")
+        }
+        
+        ViewController.LOG_INFO.forEach { x in
+            if let selector = x.selector {
+                self.disposable += self.reactive.signal(for: selector).observeValues { [weak self] _ in
+                    guard let sSelf = self else { return }
+                    print("\(String(describing: sSelf)) \(String(describing: x))")
+                }
+            }
+        }
+    }
+    
+    deinit {
+        if let deinitialize = ViewController.LOG_INFO.first(where: {$0 == .deinitialize}) {
+            print("\(String(describing: self)) \(String(describing: deinitialize))")
+        }
+        
+        disposable.dispose()
+    }
+}
+
+extension ViewController {
     enum LogInfo : String, CustomStringConvertible {
         case initialize, deinitialize, viewDidLoad, viewWillAppear, viewDidAppear, viewWillDisappear, viewDidDisappear
         
         var selector : Selector? {
             switch self {
-                case .viewDidLoad:
-                    return #selector(ViewController.viewDidLoad)
+            case .viewDidLoad:
+                return #selector(ViewController.viewDidLoad)
                 
-                case .viewWillAppear:
-                    return #selector(ViewController.viewWillAppear)
+            case .viewWillAppear:
+                return #selector(ViewController.viewWillAppear)
                 
-                case .viewDidAppear:
-                    return #selector(ViewController.viewDidAppear)
+            case .viewDidAppear:
+                return #selector(ViewController.viewDidAppear)
                 
-                case .viewWillDisappear:
-                    return #selector(ViewController.viewWillDisappear)
+            case .viewWillDisappear:
+                return #selector(ViewController.viewWillDisappear)
                 
-                case .viewDidDisappear:
-                    return #selector(ViewController.viewDidDisappear)
-
-                default:
-                    return nil
+            case .viewDidDisappear:
+                return #selector(ViewController.viewDidDisappear)
+                
+            default:
+                return nil
             }
         }
         
@@ -49,46 +88,11 @@ class ViewController: UIViewController {
             return self.rawValue
         }
     }
-    
-    static let LOG_INFO : [LogInfo] = [.initialize, .viewWillAppear, .deinitialize]
-    
-    var disposable = CompositeDisposable()
-    
-    convenience init() {
-        self.init(nibName:nil, bundle:nil)
+}
 
-        if let initialize = ViewController.LOG_INFO.first(where: {$0 == .initialize}) {
-            print("\(String(describing: self)) \(String(describing: initialize))")
-        }
-
-        ViewController.LOG_INFO.forEach { x in
-            if let selector = x.selector {
-                self.disposable += self.reactive.signal(for: selector).observeValues { [weak self] _ in
-                    guard let sSelf = self else { return }
-                    print("\(String(describing: sSelf)) \(String(describing: x))")
-                }
-            }
-        }
-    }
-
+extension ViewController {
     override var description : String {
         return shortDescription
-    }
-    
-    internal var longDescription : String {
-        return super.description
-    }
-    
-    internal var shortDescription : String {
-        return "<\(String(describing: type(of: self)))>"
-    }
-    
-    deinit {
-        if let deinitialize = ViewController.LOG_INFO.first(where: {$0 == .deinitialize}) {
-            print("\(String(describing: self)) \(String(describing: deinitialize))")
-        }
-        
-        disposable.dispose()
     }
 }
 
