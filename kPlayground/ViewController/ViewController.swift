@@ -26,8 +26,9 @@ class ViewController : UIViewController {
     }
     
     convenience init() {
-        self.init(nibName:nil, bundle:nil)
+        self.init(nibName: nil, bundle: nil)
         
+        #if DEBUG
         if let initialize = ViewController.LOG_INFO.first(where: {$0 == .initialize}) {
             print("\(String(describing: self)) \(String(describing: initialize))")
         }
@@ -40,12 +41,15 @@ class ViewController : UIViewController {
                 }
             }
         }
+        #endif
     }
     
     deinit {
+        #if DEBUG
         if let deinitialize = ViewController.LOG_INFO.first(where: {$0 == .deinitialize}) {
             print("\(String(describing: self)) \(String(describing: deinitialize))")
         }
+        #endif
         
         disposable.dispose()
     }
