@@ -11,21 +11,21 @@ import SnapKit
 import ReactiveCocoa
 import ReactiveSwift
 
-class ViewController : UIViewController {
+class ViewController: UIViewController {
     
-    private static let LOG_INFO : [LogInfo] = [.initialize, .viewWillAppear, .deinitialize]
+    private static let LOG_INFO: [LogInfo] = [.initialize, .viewWillAppear, .deinitialize]
     
     internal var disposable = CompositeDisposable()
     
-    internal var longDescription : String {
+    internal var longDescription: String {
         return super.description
     }
     
-    internal var shortDescription : String {
+    internal var shortDescription: String {
         return "<\(String(describing: type(of: self)))>"
     }
     
-    convenience init() {
+    private convenience init() {
         self.init(nibName: nil, bundle: nil)
         
         #if DEBUG
@@ -56,10 +56,10 @@ class ViewController : UIViewController {
 }
 
 extension ViewController {
-    private enum LogInfo : String, CustomStringConvertible {
+    private enum LogInfo: String, CustomStringConvertible {
         case initialize, deinitialize, viewDidLoad, viewWillAppear, viewDidAppear, viewWillDisappear, viewDidDisappear
         
-        var selector : Selector? {
+        var selector: Selector? {
             switch self {
             case .viewDidLoad:
                 return #selector(ViewController.viewDidLoad)
@@ -81,7 +81,7 @@ extension ViewController {
             }
         }
         
-        var description : String {
+        var description: String {
             if self == .initialize {
                 return "init"
             }
@@ -95,7 +95,7 @@ extension ViewController {
 }
 
 extension ViewController {
-    override var description : String {
+    override var description: String {
         return shortDescription
     }
 }

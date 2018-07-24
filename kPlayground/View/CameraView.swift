@@ -13,27 +13,22 @@ class CameraView: UIView {
 
     private var captureSession = AVCaptureSession()
     
-    private var currentCamera : AVCaptureDevice?
-    private var rearCamera : AVCaptureDevice?
-    private var frontCamera : AVCaptureDevice?
+    private var currentCamera: AVCaptureDevice?
+    private var rearCamera: AVCaptureDevice?
+    private var frontCamera: AVCaptureDevice?
     
     private var photoOutput = AVCapturePhotoOutput()
     
-    private lazy var cameraPreviewLayer : AVCaptureVideoPreviewLayer = {
+    private lazy var cameraPreviewLayer: AVCaptureVideoPreviewLayer = {
         let cameraPreviewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
         cameraPreviewLayer.videoGravity = .resizeAspectFill
         cameraPreviewLayer.connection?.videoOrientation = .portrait
         cameraPreviewLayer.frame = self.frame
-        //cameraPreviewLayer.
         return cameraPreviewLayer
     }()
     
     convenience init() {
-        self.init(frame: CGRect(x: 0, y: 0, width: 400, height: 400))
-
-        self.backgroundColor = .red
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(self.buttonClicked), name: .UIDeviceOrientationDidChange, object: nil)
+        self.init(frame: CGRect.zero)
         
         setupCaptureSession()
         setupDevice()
@@ -42,15 +37,11 @@ class CameraView: UIView {
         startRunningCaptureSession()
     }
     
-    @objc private func buttonClicked() {
-        print("wtf2")
-    }
-    
     private func setupCaptureSession() {
         captureSession.sessionPreset = AVCaptureSession.Preset.photo
     }
     
-    private func setupDevice(){
+    private func setupDevice() {
         let deviceDiscoverySession = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInWideAngleCamera], mediaType: .video, position: .unspecified)
         
         let devices = deviceDiscoverySession.devices
@@ -67,7 +58,7 @@ class CameraView: UIView {
         }
     }
     
-    private func setupInputOutput(){
+    private func setupInputOutput() {
         do {
             let captureDeviceInput = try AVCaptureDeviceInput(device: currentCamera!)
             captureSession.addInput(captureDeviceInput)
@@ -79,7 +70,7 @@ class CameraView: UIView {
         }
     }
     
-    private func setupPreviewLayer(){
+    private func setupPreviewLayer() {
         self.layer.insertSublayer(cameraPreviewLayer, at: 0)
     }
     
@@ -89,8 +80,18 @@ class CameraView: UIView {
 }
 
 extension CameraView {
+    
     override func layoutSubviews() {
         super.layoutSubviews()
+        
         self.cameraPreviewLayer.frame.size = self.frame.size
+    }
+    
+    override func updateConstraints() {
+        self.snp.remakeConstraints { make in
+            make.top.left.bottom.right.equalToSuperview()
+        }
+        
+        super.updateConstraints()
     }
 }
