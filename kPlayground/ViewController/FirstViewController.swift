@@ -25,6 +25,8 @@ class FirstViewController: ViewController {
 
 extension FirstViewController {
     override func viewDidLoad() {
+        super.viewDidLoad()
+        
         self.view.addSubview(button)
         button.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
