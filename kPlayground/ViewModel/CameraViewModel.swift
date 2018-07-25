@@ -6,21 +6,37 @@
 //  Copyright © 2018 s.kananat. All rights reserved.
 //
 
+import AVFoundation
 import Result
 import ReactiveCocoa
 import ReactiveSwift
 
-class CameraViewModel {
+class CameraViewModel: NSObject {
 
+    let (photoSignal, photoObserver) = Signal<UIImage?, NoError>.pipe()
+    
     lazy var closeButtonPressed: Action<Void, Void, NoError> = {
         return Action { value in
             return SignalProducer(value: value)
         }
     }()
     
-    lazy var captureButtonPressed: Action<UIImage, UIImage, NoError> = {
+    lazy var captureButtonPressed: Action<Void, Void, NoError> = {
         return Action { value in
             return SignalProducer(value: value)
         }
     }()
+}
+
+extension CameraViewModel: AVCapturePhotoCaptureDelegate {
+    
+    func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
+        
+        guard let imageData = photo.fileDataRepresentation(), let image = UIImage(data: imageData) else {
+            self.photoObserver.send(value: nil)
+            return
+        }
+        
+        self.photoObserver.send(value: image)
+    }
 }

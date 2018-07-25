@@ -24,23 +24,27 @@ class ViewController: UIViewController {
         return "<\(String(describing: type(of: self)))>"
     }
     
-    private convenience init() {
-        self.init(nibName: nil, bundle: nil)
+    internal init() {
+        super.init(nibName: nil, bundle: nil)
         
         #if DEBUG
-        if let initialize = ViewController.LOG_INFO.first(where: {$0 == .initialize}) {
-            print("\(String(describing: self)) \(String(describing: initialize))")
-        }
-        
-        ViewController.LOG_INFO.forEach { x in
-            if let selector = x.selector {
-                self.disposable += self.reactive.signal(for: selector).observeValues { [weak self] _ in
-                    guard let sSelf = self else { return }
-                    print("\(String(describing: sSelf)) \(String(describing: x))")
+            if let initialize = ViewController.LOG_INFO.first(where: {$0 == .initialize}) {
+                print("\(String(describing: self)) \(String(describing: initialize))")
+            }
+            
+            ViewController.LOG_INFO.forEach { x in
+                if let selector = x.selector {
+                    self.disposable += self.reactive.signal(for: selector).observeValues { [weak self] _ in
+                        guard let sSelf = self else { return }
+                        print("\(String(describing: sSelf)) \(String(describing: x))")
+                    }
                 }
             }
-        }
         #endif
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     deinit {

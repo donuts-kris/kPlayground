@@ -12,30 +12,38 @@ import ReactiveSwift
 
 class CameraViewController: ViewController {
     
-    private lazy var viewModel: CameraViewModel = {
-        let viewModel = CameraViewModel()
+    private lazy var viewModel = {
+        return CameraViewModel()
+    }()
+    
+    private lazy var cameraView = {
+        return CameraView()
+    }()
+    
+    private lazy var cameraControlView = {
+        return CameraControlView()
+    }()
+    
+    private func bind(_ viewModel: CameraViewModel) -> Disposable {
+        let disposable = CompositeDisposable()
         
-        self.disposable += viewModel.closeButtonPressed.values.observe(on: UIScheduler()).observeValues { [weak self] in
+        disposable += cameraView.bind(self.viewModel)
+        
+        disposable += cameraControlView.bind(self.viewModel)
+        
+        disposable += viewModel.closeButtonPressed.values.observe(on: UIScheduler()).observeValues { [weak self] in
             self?.dismiss(animated: true, completion: nil)
         }
         
-        self.disposable += viewModel.captureButtonPressed.values.observe(on: UIScheduler()).observeValues { [weak self] value in
-            print("captureButtonPressed")
-            //self?.dismiss(animated: true, completion: nil)
+        disposable += viewModel.photoSignal.observeValues { [weak self] value in
+            guard let value = value else { return }
+            
+            let viewController = PhotoViewController(value)
+            self?.present(viewController, animated: true)
         }
         
-        return viewModel
-    }()
-    
-    private lazy var cameraView: CameraView = {
-        let cameraView = CameraView()
-        return cameraView
-    }()
-    
-    private lazy var cameraControlView: CameraControlView = {
-        let cameraControlView = CameraControlView(self.viewModel)
-        return cameraControlView
-    }()
+        return disposable
+    }
 }
 
 extension CameraViewController {
@@ -44,6 +52,8 @@ extension CameraViewController {
         
         self.view.addSubview(cameraView)
         self.view.addSubview(cameraControlView)
+        
+        self.disposable += self.bind(viewModel)
     }
     
     override var shouldAutorotate: Bool {

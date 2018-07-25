@@ -8,9 +8,11 @@
 
 import UIKit
 import AVFoundation
+import Result
+import ReactiveSwift
 
 class CameraView: UIView {
-
+    
     private var captureSession = AVCaptureSession()
     
     private var currentCamera: AVCaptureDevice?
@@ -35,6 +37,16 @@ class CameraView: UIView {
         setupInputOutput()
         setupPreviewLayer()
         startRunningCaptureSession()
+    }
+    
+    func bind(_ viewModel: CameraViewModel) -> Disposable {
+        let disposable = CompositeDisposable()
+        
+        disposable += viewModel.captureButtonPressed.values.observe(on: UIScheduler()).observeValues { [weak self] in
+            self?.photoOutput.capturePhoto(with: AVCapturePhotoSettings(), delegate: viewModel)
+        }
+        
+        return disposable
     }
     
     private func setupCaptureSession() {
@@ -89,7 +101,7 @@ extension CameraView {
     
     override func updateConstraints() {
         self.snp.remakeConstraints { make in
-            make.top.left.bottom.right.equalToSuperview()
+            make.left.right.top.bottom.equalToSuperview()
         }
         
         super.updateConstraints()

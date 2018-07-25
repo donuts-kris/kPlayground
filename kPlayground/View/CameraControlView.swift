@@ -8,17 +8,15 @@
 
 import UIKit
 import ReactiveCocoa
+import ReactiveSwift
 import SnapKit
 
 class CameraControlView: AutoRotateView {
-    
-    private unowned var viewModel: CameraViewModel
-    
+
     private lazy var captureButton: UIButton = {
         let button = UIButton()
         button.setTitle("o", for: .normal)
         button.setTitleColor(.white, for: .normal)
-        //button.reactive.pressed = CocoaAction(self.viewModel.captureButtonPressed, input)
         return button
     }()
     
@@ -33,25 +31,24 @@ class CameraControlView: AutoRotateView {
         let button = UIButton()
         button.setTitle("x", for: .normal)
         button.setTitleColor(.white, for: .normal)
-        button.reactive.pressed = CocoaAction(self.viewModel.closeButtonPressed)
         return button
     }()
     
-    convenience init(_ viewModel: CameraViewModel) {
-        self.init(_: viewModel, frame: CGRect.zero)
-    }
-    
-    private init(_ viewModel: CameraViewModel, frame: CGRect) {
-        self.viewModel = viewModel
-        super.init(frame: frame)
+    convenience init() {
+        self.init(frame: CGRect.zero)
         
-        self.addSubview(captureButton)
-        self.addSubview(modeButton)
-        self.addSubview(closeButton)
+        self.addSubview(self.captureButton)
+        self.addSubview(self.modeButton)
+        self.addSubview(self.closeButton)
     }
     
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+    func bind(_ viewModel: CameraViewModel) -> Disposable {
+        let disposable = CompositeDisposable()
+        
+        captureButton.reactive.pressed = CocoaAction(viewModel.captureButtonPressed)
+        closeButton.reactive.pressed = CocoaAction(viewModel.closeButtonPressed)
+        
+        return disposable
     }
 }
 

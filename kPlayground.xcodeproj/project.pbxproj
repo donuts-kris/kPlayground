@@ -11,6 +11,7 @@
 		2FBA56D295073E1C13941AB2 /* Pods_kPlayground.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CDD8E9AECF9D199BDC4A3A24 /* Pods_kPlayground.framework */; };
 		5952CE2D21081CFF0050F038 /* AutoRotateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5952CE2C21081CFF0050F038 /* AutoRotateView.swift */; };
 		5952CE30210847300050F038 /* CameraViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5952CE2F210847300050F038 /* CameraViewModel.swift */; };
+		5952CE3221085C8F0050F038 /* PhotoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5952CE3121085C8F0050F038 /* PhotoViewController.swift */; };
 		59684E932105797800914A10 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59684E922105797800914A10 /* AppDelegate.swift */; };
 		59684E952105797800914A10 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59684E942105797800914A10 /* ViewController.swift */; };
 		59684E9A2105797800914A10 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 59684E992105797800914A10 /* Assets.xcassets */; };
@@ -47,6 +48,7 @@
 		448CAB9E22ABD776D6FDFE85 /* Pods_kPlaygroundUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_kPlaygroundUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5952CE2C21081CFF0050F038 /* AutoRotateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoRotateView.swift; sourceTree = "<group>"; };
 		5952CE2F210847300050F038 /* CameraViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewModel.swift; sourceTree = "<group>"; };
+		5952CE3121085C8F0050F038 /* PhotoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoViewController.swift; sourceTree = "<group>"; };
 		59684E8F2105797800914A10 /* kPlayground.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = kPlayground.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		59684E922105797800914A10 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		59684E942105797800914A10 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -190,6 +192,7 @@
 				59684E942105797800914A10 /* ViewController.swift */,
 				59684EC021057C7A00914A10 /* FirstViewController.swift */,
 				59684EC22105A73000914A10 /* CameraViewController.swift */,
+				5952CE3121085C8F0050F038 /* PhotoViewController.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -438,6 +441,7 @@
 				597077CD2106B11600CBC5C3 /* CameraView.swift in Sources */,
 				59684EC32105A73000914A10 /* CameraViewController.swift in Sources */,
 				597077D82107019A00CBC5C3 /* RotatableView.swift in Sources */,
+				5952CE3221085C8F0050F038 /* PhotoViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
