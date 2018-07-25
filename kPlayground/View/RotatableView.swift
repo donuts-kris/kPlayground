@@ -20,7 +20,7 @@ class RotatableView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    @objc private final func orientationDidChange() {
+    @objc internal final func orientationDidChange() {
         
         guard self.superview != nil else { return }
         

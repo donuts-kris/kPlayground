@@ -19,7 +19,7 @@ class FirstViewController: ViewController {
     }()
     
     @objc private func buttonClicked() {
-        self.present(CameraViewController(), animated: false, completion: nil)
+        self.present(CameraViewController(), animated: true, completion: nil)
     }
 }
 
@@ -27,10 +27,10 @@ extension FirstViewController {
     override func viewDidLoad() {
         self.view.addSubview(button)
         button.snp.makeConstraints { make in
-            make.width.equalTo(50)
-            make.height.equalTo(50)
             make.centerX.equalToSuperview()
             make.bottom.equalToSuperview().offset(-30)
+            make.width.equalTo(50)
+            make.height.equalTo(50)
         }
     }
 }

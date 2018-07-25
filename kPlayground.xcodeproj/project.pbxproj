@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		2614C8C9EBFCE67D29ACCD68 /* Pods_kPlaygroundUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 448CAB9E22ABD776D6FDFE85 /* Pods_kPlaygroundUITests.framework */; };
 		2FBA56D295073E1C13941AB2 /* Pods_kPlayground.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CDD8E9AECF9D199BDC4A3A24 /* Pods_kPlayground.framework */; };
+		5952CE2D21081CFF0050F038 /* AutoRotateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5952CE2C21081CFF0050F038 /* AutoRotateView.swift */; };
+		5952CE30210847300050F038 /* CameraViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5952CE2F210847300050F038 /* CameraViewModel.swift */; };
 		59684E932105797800914A10 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59684E922105797800914A10 /* AppDelegate.swift */; };
 		59684E952105797800914A10 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59684E942105797800914A10 /* ViewController.swift */; };
 		59684E9A2105797800914A10 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 59684E992105797800914A10 /* Assets.xcassets */; };
@@ -43,6 +45,8 @@
 		0C5D14853591A89D87435756 /* Pods-kPlayground.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-kPlayground.debug.xcconfig"; path = "Pods/Target Support Files/Pods-kPlayground/Pods-kPlayground.debug.xcconfig"; sourceTree = "<group>"; };
 		177717C44A5791DF458DF16C /* Pods-kPlaygroundTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-kPlaygroundTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-kPlaygroundTests/Pods-kPlaygroundTests.release.xcconfig"; sourceTree = "<group>"; };
 		448CAB9E22ABD776D6FDFE85 /* Pods_kPlaygroundUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_kPlaygroundUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		5952CE2C21081CFF0050F038 /* AutoRotateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoRotateView.swift; sourceTree = "<group>"; };
+		5952CE2F210847300050F038 /* CameraViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewModel.swift; sourceTree = "<group>"; };
 		59684E8F2105797800914A10 /* kPlayground.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = kPlayground.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		59684E922105797800914A10 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		59684E942105797800914A10 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -118,6 +122,14 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		5952CE2E210847030050F038 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				5952CE2F210847300050F038 /* CameraViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
 		59684E862105797700914A10 = {
 			isa = PBXGroup;
 			children = (
@@ -144,6 +156,7 @@
 			isa = PBXGroup;
 			children = (
 				597077D22106F73A00CBC5C3 /* Protocol */,
+				5952CE2E210847030050F038 /* ViewModel */,
 				597077D02106F6DD00CBC5C3 /* ViewController */,
 				597077D12106F70B00CBC5C3 /* View */,
 				59684E922105797800914A10 /* AppDelegate.swift */,
@@ -187,6 +200,7 @@
 				597077CC2106B11600CBC5C3 /* CameraView.swift */,
 				597077D32106F7CE00CBC5C3 /* CameraControlView.swift */,
 				597077D72107019A00CBC5C3 /* RotatableView.swift */,
+				5952CE2C21081CFF0050F038 /* AutoRotateView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -419,6 +433,8 @@
 				59684EC121057C7A00914A10 /* FirstViewController.swift in Sources */,
 				59684E952105797800914A10 /* ViewController.swift in Sources */,
 				59684E932105797800914A10 /* AppDelegate.swift in Sources */,
+				5952CE2D21081CFF0050F038 /* AutoRotateView.swift in Sources */,
+				5952CE30210847300050F038 /* CameraViewModel.swift in Sources */,
 				597077CD2106B11600CBC5C3 /* CameraView.swift in Sources */,
 				59684EC32105A73000914A10 /* CameraViewController.swift in Sources */,
 				597077D82107019A00CBC5C3 /* RotatableView.swift in Sources */,
