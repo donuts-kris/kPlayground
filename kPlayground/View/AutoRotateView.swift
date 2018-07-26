@@ -18,20 +18,6 @@ internal class AutoRotateView: RotatableView {
         return 0.4
     }
     
-    internal convenience init() {
-        self.init(frame: UIScreen.main.bounds)
-    }
-    
-    internal override init(frame: CGRect) {
-        super.init(frame: frame)
-        
-        self.didLoad()
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
     private func makeConstraintsPortrait() {
         self.snp.remakeConstraints { make in
             make.center.equalToSuperview()
@@ -50,14 +36,6 @@ internal class AutoRotateView: RotatableView {
                 make.height.equalTo(referenceView.snp.width)
             }
         }
-    }
-}
-//todo
-extension AutoRotateView {
-    override func updateConstraints() {
-        self.orientationDidChange()
-        
-        super.updateConstraints()
     }
 }
 

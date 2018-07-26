@@ -49,6 +49,10 @@ class CameraControlView: AutoRotateView {
             self?.modeButton.setTitle(value.rawValue, for: .normal)
         }
         
+        disposable += viewModel.source.producer.observe(on: UIScheduler()).skipRepeats().startWithValues { [weak self] value in
+            self?.switchButton.setTitle(value.rawValue, for: .normal)
+        }
+        
         disposable += self.modeButton.reactive.controlEvents(.touchDown).observe(on: UIScheduler()).observeValues { _ in
             viewModel.mode.value.toggle()
         }
@@ -64,6 +68,7 @@ class CameraControlView: AutoRotateView {
 extension CameraControlView {
     
     override func didLoad() {
+
         self.addSubview(self.captureButton)
         self.captureButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()

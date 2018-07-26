@@ -17,7 +17,7 @@ class CameraViewController: ViewController {
     }()
     
     private lazy var cameraView = {
-        return CameraView()
+        return CameraView(frame: CGRect(x: 0, y: 0, width: 375, height: 667))
     }()
     
     private lazy var cameraControlView = {
