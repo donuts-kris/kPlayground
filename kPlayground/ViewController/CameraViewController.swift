@@ -27,15 +27,15 @@ class CameraViewController: ViewController {
     private func bind(_ viewModel: CameraViewModel) -> Disposable {
         let disposable = CompositeDisposable()
         
-        disposable += cameraView.bind(self.viewModel)
+        disposable += self.cameraView.bind(viewModel)
         
-        disposable += cameraControlView.bind(self.viewModel)
+        disposable += self.cameraControlView.bind(viewModel)
         
         disposable += viewModel.closeButtonPressed.values.observe(on: UIScheduler()).observeValues { [weak self] in
             self?.dismiss(animated: true, completion: nil)
         }
         
-        disposable += viewModel.photoSignal.observeValues { [weak self] value in
+        disposable += viewModel.photoSignal.observe(on: UIScheduler()).observeValues { [weak self] value in
             guard let value = value else { return }
             
             let viewController = PhotoViewController(value)
@@ -51,6 +51,7 @@ extension CameraViewController {
         super.viewDidLoad()
         
         self.view.addSubview(cameraView)
+        //cameraView.updateConstraints()
         self.view.addSubview(cameraControlView)
         
         self.disposable += self.bind(viewModel)

@@ -22,7 +22,6 @@ class CameraControlView: AutoRotateView {
     
     private lazy var modeButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Photo", for: .normal)
         button.setTitleColor(.white, for: .normal)
         return button
     }()
@@ -35,7 +34,7 @@ class CameraControlView: AutoRotateView {
     }()
     
     convenience init() {
-        self.init(frame: CGRect.zero)
+        self.init(frame: UIScreen.main.bounds)
         
         self.addSubview(self.captureButton)
         self.addSubview(self.modeButton)
@@ -45,8 +44,16 @@ class CameraControlView: AutoRotateView {
     func bind(_ viewModel: CameraViewModel) -> Disposable {
         let disposable = CompositeDisposable()
         
-        captureButton.reactive.pressed = CocoaAction(viewModel.captureButtonPressed)
-        closeButton.reactive.pressed = CocoaAction(viewModel.closeButtonPressed)
+        self.captureButton.reactive.pressed = CocoaAction(viewModel.captureButtonPressed)
+        self.closeButton.reactive.pressed = CocoaAction(viewModel.closeButtonPressed)
+        
+        disposable += viewModel.mode.producer.observe(on: UIScheduler()).skipRepeats().startWithValues { [weak self] value in
+            self?.modeButton.setTitle(value.rawValue, for: .normal)
+        }
+        
+        disposable += self.modeButton.reactive.controlEvents(.touchDown).observe(on: UIScheduler()).observeValues { _ in
+            viewModel.mode.value.toggle()
+        }
         
         return disposable
     }
@@ -54,30 +61,28 @@ class CameraControlView: AutoRotateView {
 
 extension CameraControlView {
     
-    override func updateConstraints() {
-        self.captureButton.snp.remakeConstraints { make in
+    override func didMoveToSuperview() {
+        super.didMoveToSuperview()
+        
+        self.captureButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.bottom.equalToSuperview().offset(-15)
             make.width.equalTo(50)
             make.height.equalTo(50)
         }
         
-        self.modeButton.snp.remakeConstraints { make in
+        self.modeButton.snp.makeConstraints { make in
             make.left.equalToSuperview().offset(15)
             make.bottom.equalToSuperview().offset(-15)
             make.width.equalTo(50)
             make.height.equalTo(50)
         }
         
-        self.closeButton.snp.remakeConstraints { make in
+        self.closeButton.snp.makeConstraints { make in
             make.right.equalToSuperview().offset(-15)
             make.top.equalToSuperview().offset(15)
             make.width.equalTo(50)
             make.height.equalTo(50)
         }
-        
-        self.orientationDidChange()
-        
-        super.updateConstraints()
     }
 }

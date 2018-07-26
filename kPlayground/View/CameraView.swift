@@ -11,7 +11,7 @@ import AVFoundation
 import Result
 import ReactiveSwift
 
-class CameraView: UIView {
+class CameraView: View {
     
     private var captureSession = AVCaptureSession()
     

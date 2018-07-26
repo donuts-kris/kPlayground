@@ -13,6 +13,8 @@ import ReactiveSwift
 
 class CameraViewModel: NSObject {
 
+    let mode = MutableProperty<CameraMode>(.photo)
+    
     let (photoSignal, photoObserver) = Signal<UIImage?, NoError>.pipe()
     
     lazy var closeButtonPressed: Action<Void, Void, NoError> = {
@@ -38,5 +40,15 @@ extension CameraViewModel: AVCapturePhotoCaptureDelegate {
         }
         
         self.photoObserver.send(value: image)
+    }
+}
+
+extension CameraViewModel {
+    enum CameraMode: String {
+        case photo = "Photo", video = "Video"
+        
+        mutating func toggle() {
+            self = (self == .photo) ? .video : .photo
+        }
     }
 }

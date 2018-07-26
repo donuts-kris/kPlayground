@@ -10,9 +10,9 @@ import UIKit
 import ReactiveCocoa
 import ReactiveSwift
 
-class ViewController: UIViewController {
+internal class ViewController: UIViewController {
     
-    private static let LOG_INFO: [LogInfo] = [.initialize, .viewWillAppear, .deinitialize]
+    private static let LOG_INFO: [LogInfo] = [.viewWillDisappear]//.initialize, .viewWillAppear, .deinitialize]
     
     internal var disposable = CompositeDisposable()
     
@@ -34,7 +34,7 @@ class ViewController: UIViewController {
             
             ViewController.LOG_INFO.forEach { x in
                 if let selector = x.selector {
-                    self.disposable += self.reactive.signal(for: selector).observeValues { [weak self] _ in
+                    self.disposable += self.reactive.signal(for: selector).observe(on: UIScheduler()).observeValues { [weak self] _ in
                         guard let sSelf = self else { return }
                         print("\(String(describing: sSelf)) \(String(describing: x))")
                     }
@@ -54,7 +54,7 @@ class ViewController: UIViewController {
         }
         #endif
         
-        disposable.dispose()
+        self.disposable.dispose()
     }
 }
 

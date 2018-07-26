@@ -8,22 +8,12 @@
 
 import UIKit
 
-class RotatableView: UIView {
+internal class RotatableView: View {
 
-    internal override init(frame: CGRect) {
-        super.init(frame: frame)
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(self.orientationDidChange), name: .UIDeviceOrientationDidChange, object: nil)
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
     @objc internal final func orientationDidChange() {
         
         guard self.superview != nil else { return }
-        
+
         switch UIDevice.current.orientation {
         case .portrait:
             orientationDidChangePortrait()
@@ -46,4 +36,14 @@ class RotatableView: UIView {
     @objc dynamic internal func orientationDidChangePortraitUpsideDown() { }
     @objc dynamic internal func orientationDidChangeLandscapeLeft() { }
     @objc dynamic internal func orientationDidChangeLandscapeRight() { }
+}
+
+extension RotatableView {
+    override func didAppear() {
+        NotificationCenter.default.addObserver(self, selector: #selector(self.orientationDidChange), name: .UIDeviceOrientationDidChange, object: nil)
+    }
+    
+    override func didDisappear() {
+        NotificationCenter.default.removeObserver(self)
+    }
 }
