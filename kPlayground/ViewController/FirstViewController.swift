@@ -28,7 +28,7 @@ extension FirstViewController {
         super.viewDidLoad()
         
         self.view.addSubview(button)
-        button.snp.makeConstraints { make in
+        self.button.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.bottom.equalToSuperview().offset(-30)
             make.width.equalTo(50)

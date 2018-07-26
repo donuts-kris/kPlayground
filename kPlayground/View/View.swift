@@ -36,17 +36,7 @@ internal class View: UIView {
     convenience init() {
         self.init(frame: UIScreen.main.bounds)
     }
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        
-        self.didLoad()
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
+
     deinit {
         self.disposable.dispose()
     }
@@ -71,9 +61,11 @@ internal class View: UIView {
     
 extension View {
     override func didMoveToSuperview() {
-        super.didMoveToSuperview()
+        guard self.superview != nil else { return }
         
-        guard isOverriddenWillAppear || isOverriddenDidAppear || isOverriddenWillDisappear || isOverriddenDidDisappear, let viewController = findViewController() else { return }
+        self.didLoad()
+        
+        guard isOverriddenWillAppear || isOverriddenDidAppear || isOverriddenWillDisappear || isOverriddenDidDisappear, let viewController = self.findViewController() else { return }
         
         if isOverriddenWillAppear {
             self.disposable += viewController.reactive.signal(for: #selector(ViewController.viewWillAppear)).observe(on: UIScheduler()).observeValues { [weak self] value in

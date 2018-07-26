@@ -12,7 +12,7 @@ import ReactiveSwift
 
 internal class ViewController: UIViewController {
     
-    private static let LOG_INFO: [LogInfo] = [.viewWillDisappear]//.initialize, .viewWillAppear, .deinitialize]
+    private static let LOG_INFO: [LogInfo] = [.viewWillAppear, .deinitialize]
     
     internal var disposable = CompositeDisposable()
     

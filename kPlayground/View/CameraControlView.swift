@@ -26,20 +26,18 @@ class CameraControlView: AutoRotateView {
         return button
     }()
     
+    private lazy var switchButton: UIButton = {
+        let button = UIButton()
+        button.setTitleColor(.white, for: .normal)
+        return button
+    }()
+    
     private lazy var closeButton: UIButton = {
         let button = UIButton()
         button.setTitle("x", for: .normal)
         button.setTitleColor(.white, for: .normal)
         return button
     }()
-    
-    convenience init() {
-        self.init(frame: UIScreen.main.bounds)
-        
-        self.addSubview(self.captureButton)
-        self.addSubview(self.modeButton)
-        self.addSubview(self.closeButton)
-    }
     
     func bind(_ viewModel: CameraViewModel) -> Disposable {
         let disposable = CompositeDisposable()
@@ -55,15 +53,18 @@ class CameraControlView: AutoRotateView {
             viewModel.mode.value.toggle()
         }
         
+        disposable += self.switchButton.reactive.controlEvents(.touchDown).observe(on: UIScheduler()).observeValues { _ in
+            viewModel.source.value.toggle()
+        }
+        
         return disposable
     }
 }
 
 extension CameraControlView {
     
-    override func didMoveToSuperview() {
-        super.didMoveToSuperview()
-        
+    override func didLoad() {
+        self.addSubview(self.captureButton)
         self.captureButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()
             make.bottom.equalToSuperview().offset(-15)
@@ -71,6 +72,7 @@ extension CameraControlView {
             make.height.equalTo(50)
         }
         
+        self.addSubview(self.modeButton)
         self.modeButton.snp.makeConstraints { make in
             make.left.equalToSuperview().offset(15)
             make.bottom.equalToSuperview().offset(-15)
@@ -78,6 +80,15 @@ extension CameraControlView {
             make.height.equalTo(50)
         }
         
+        self.addSubview(self.switchButton)
+        self.switchButton.snp.makeConstraints { make in
+            make.left.equalToSuperview().offset(65)
+            make.bottom.equalToSuperview().offset(-15)
+            make.width.equalTo(50)
+            make.height.equalTo(50)
+        }
+        
+        self.addSubview(self.closeButton)
         self.closeButton.snp.makeConstraints { make in
             make.right.equalToSuperview().offset(-15)
             make.top.equalToSuperview().offset(15)

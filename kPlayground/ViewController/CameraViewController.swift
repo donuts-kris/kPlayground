@@ -51,10 +51,9 @@ extension CameraViewController {
         super.viewDidLoad()
         
         self.view.addSubview(cameraView)
-        //cameraView.updateConstraints()
         self.view.addSubview(cameraControlView)
         
-        self.disposable += self.bind(viewModel)
+        self.disposable += self.bind(self.viewModel)
     }
     
     override var shouldAutorotate: Bool {

@@ -8,22 +8,28 @@
 
 import UIKit
 
-class AutoRotateView: RotatableView {
-  
-    internal override init( frame: CGRect) {
-        super.init(frame: frame)
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+internal class AutoRotateView: RotatableView {
     
     internal var referenceView: UIView? {
         return superview
     }
     
-    internal var animationDuration: TimeInterval {
+    internal var animatingDuration: TimeInterval {
         return 0.4
+    }
+    
+    internal convenience init() {
+        self.init(frame: UIScreen.main.bounds)
+    }
+    
+    internal override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        self.didLoad()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     private func makeConstraintsPortrait() {
@@ -46,7 +52,7 @@ class AutoRotateView: RotatableView {
         }
     }
 }
-
+//todo
 extension AutoRotateView {
     override func updateConstraints() {
         self.orientationDidChange()
@@ -57,7 +63,7 @@ extension AutoRotateView {
 
 extension AutoRotateView {
     internal override func orientationDidChangePortrait() {
-        UIView.animate(withDuration: animationDuration) {
+        UIView.animate(withDuration: animatingDuration) {
             self.transform = CGAffineTransform.identity
             
             self.makeConstraintsPortrait()
@@ -65,7 +71,7 @@ extension AutoRotateView {
     }
     
     internal override func orientationDidChangePortraitUpsideDown() {
-        UIView.animate(withDuration: animationDuration) {
+        UIView.animate(withDuration: animatingDuration) {
             self.transform = CGAffineTransform(rotationAngle: CGFloat.pi)
             
             self.makeConstraintsPortrait()
@@ -73,7 +79,7 @@ extension AutoRotateView {
     }
     
     internal override func orientationDidChangeLandscapeLeft() {
-        UIView.animate(withDuration: animationDuration) {
+        UIView.animate(withDuration: animatingDuration) {
             self.transform = CGAffineTransform(rotationAngle: CGFloat.pi/2)
             
             self.makeContraintsLandscape()
@@ -81,7 +87,7 @@ extension AutoRotateView {
     }
     
     internal override func orientationDidChangeLandscapeRight() {
-        UIView.animate(withDuration: animationDuration) {
+        UIView.animate(withDuration: animatingDuration) {
             self.transform = CGAffineTransform(rotationAngle: -CGFloat.pi/2)
             
             self.makeContraintsLandscape()

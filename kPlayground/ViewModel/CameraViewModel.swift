@@ -13,7 +13,8 @@ import ReactiveSwift
 
 class CameraViewModel: NSObject {
 
-    let mode = MutableProperty<CameraMode>(.photo)
+    let mode = MutableProperty<CaptureMode>(.photo)
+    let source = MutableProperty<CaptureSource>(.back)
     
     let (photoSignal, photoObserver) = Signal<UIImage?, NoError>.pipe()
     
@@ -44,11 +45,20 @@ extension CameraViewModel: AVCapturePhotoCaptureDelegate {
 }
 
 extension CameraViewModel {
-    enum CameraMode: String {
+    
+    enum CaptureMode: String {
         case photo = "Photo", video = "Video"
         
         mutating func toggle() {
             self = (self == .photo) ? .video : .photo
+        }
+    }
+    
+    enum CaptureSource: String {
+        case front = "Front", back = "Back"
+        
+        mutating func toggle() {
+            self = (self == .front) ? .back : .front
         }
     }
 }
