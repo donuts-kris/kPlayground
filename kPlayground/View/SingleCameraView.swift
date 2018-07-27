@@ -61,7 +61,7 @@ class SingleCameraView: RotatableView {
         }
         
         self.layer.insertSublayer(self.previewLayer, at: 0)
-        self.connect()
+        _ = self.connect()
         self.disconnect()
     }
     
@@ -70,9 +70,7 @@ class SingleCameraView: RotatableView {
         self.previewLayer.connection?.isEnabled = true
         
         self.isHidden = false
-        
-        print("\(name) : connect")
-        
+
         return self.photoOutput
     }
     
@@ -81,8 +79,6 @@ class SingleCameraView: RotatableView {
         self.previewLayer.connection?.isEnabled = false
         
         self.isHidden = true
-        
-         print("\(name) : disconnect")
     }
 }
 
