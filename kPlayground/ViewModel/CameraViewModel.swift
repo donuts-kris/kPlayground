@@ -12,19 +12,24 @@ import ReactiveCocoa
 import ReactiveSwift
 
 class CameraViewModel: NSObject {
-
-    let mode = MutableProperty<CaptureMode>(.photo)
-    let source = MutableProperty<CaptureSource>(.back)
-    
     let (photoSignal, photoObserver) = Signal<UIImage?, NoError>.pipe()
     
-    lazy var closeButtonPressed: Action<Void, Void, NoError> = {
+    let mode = MutableProperty<CaptureMode>(.photo)
+    let source = MutableProperty<String>("Unknown")
+    
+    lazy var captureButtonPressed: Action<Void, Void, NoError> = {
         return Action { value in
             return SignalProducer(value: value)
         }
     }()
     
-    lazy var captureButtonPressed: Action<Void, Void, NoError> = {
+    lazy var switchButtonPressed: Action<Void, Void, NoError> = {
+        return Action { value in
+            return SignalProducer(value: value)
+        }
+    }()
+    
+    lazy var closeButtonPressed: Action<Void, Void, NoError> = {
         return Action { value in
             return SignalProducer(value: value)
         }
@@ -51,14 +56,6 @@ extension CameraViewModel {
         
         mutating func toggle() {
             self = (self == .photo) ? .video : .photo
-        }
-    }
-    
-    enum CaptureSource: String {
-        case front = "Front", back = "Back"
-        
-        mutating func toggle() {
-            self = (self == .front) ? .back : .front
         }
     }
 }

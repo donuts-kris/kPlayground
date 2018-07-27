@@ -43,6 +43,7 @@ class CameraControlView: AutoRotateView {
         let disposable = CompositeDisposable()
         
         self.captureButton.reactive.pressed = CocoaAction(viewModel.captureButtonPressed)
+        self.switchButton.reactive.pressed = CocoaAction(viewModel.switchButtonPressed)
         self.closeButton.reactive.pressed = CocoaAction(viewModel.closeButtonPressed)
         
         disposable += viewModel.mode.producer.observe(on: UIScheduler()).skipRepeats().startWithValues { [weak self] value in
@@ -50,17 +51,13 @@ class CameraControlView: AutoRotateView {
         }
         
         disposable += viewModel.source.producer.observe(on: UIScheduler()).skipRepeats().startWithValues { [weak self] value in
-            self?.switchButton.setTitle(value.rawValue, for: .normal)
+            self?.switchButton.setTitle(value, for: .normal)
         }
         
         disposable += self.modeButton.reactive.controlEvents(.touchDown).observe(on: UIScheduler()).observeValues { _ in
             viewModel.mode.value.toggle()
         }
-        
-        disposable += self.switchButton.reactive.controlEvents(.touchDown).observe(on: UIScheduler()).observeValues { _ in
-            viewModel.source.value.toggle()
-        }
-        
+
         return disposable
     }
 }
@@ -88,7 +85,7 @@ extension CameraControlView {
         
         self.addSubview(self.switchButton)
         self.switchButton.snp.makeConstraints { make in
-            make.left.equalToSuperview().offset(65)
+            make.left.equalToSuperview().offset(85)
             make.bottom.equalToSuperview().offset(-15)
             make.width.equalTo(50)
             make.height.equalTo(50)

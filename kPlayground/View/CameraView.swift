@@ -13,91 +13,74 @@ import ReactiveSwift
 
 class CameraView: View {
     
-    private var captureSession = AVCaptureSession()
-    
-    private var currentCamera: AVCaptureDevice?
-    private var frontCamera: AVCaptureDevice?
-    private var backCamera: AVCaptureDevice?
-    
-    private var photoOutput = AVCapturePhotoOutput()
-    
-    private lazy var cameraPreviewLayer: AVCaptureVideoPreviewLayer = {
-        let cameraPreviewLayer = AVCaptureVideoPreviewLayer(session: self.captureSession)
-        cameraPreviewLayer.videoGravity = .resizeAspectFill
-        cameraPreviewLayer.connection?.videoOrientation = .portrait
-        cameraPreviewLayer.frame = self.frame
-        return cameraPreviewLayer
+    private lazy var devices: [AVCaptureDevice] = {
+        let deviceDiscoverySession = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInWideAngleCamera], mediaType: .video, position: .unspecified)
+        
+        return deviceDiscoverySession.devices
     }()
     
+    private lazy var cameras = {
+        return self.findCameras()
+    }()
+    
+    private var photoOutput: AVCapturePhotoOutput?
+    
+    private var cameraIndex = -1
+
     func bind(_ viewModel: CameraViewModel) -> Disposable {
         let disposable = CompositeDisposable()
         
         disposable += viewModel.captureButtonPressed.values.observe(on: UIScheduler()).observeValues { [weak self] in
-            self?.photoOutput.capturePhoto(with: AVCapturePhotoSettings(), delegate: viewModel)
+            self?.photoOutput?.capturePhoto(with: AVCapturePhotoSettings(), delegate: viewModel)
         }
         
-        disposable += viewModel.source.producer.observe(on: UIScheduler()).startWithValues { [weak self] value in
-            if value == .back {
-                return
-            }
-            
-            self?.currentCamera = self?.frontCamera
-            self?.setupInputOutput()
+        disposable += viewModel.switchButtonPressed.values.observe(on: UIScheduler()).observeValues { [weak self] in
+            guard let sSelf = self else { return }
+            sSelf.nextCamera()
+            viewModel.source.swap(sSelf.cameras[sSelf.cameraIndex].name)
         }
+        
+        viewModel.source.swap(self.cameras[self.cameraIndex].name)
         
         return disposable
     }
     
-    private func setupCaptureSession() {
-        self.captureSession.sessionPreset = AVCaptureSession.Preset.photo
+    private func findCameras() -> [SingleCameraView] {
+        var cameras: [SingleCameraView] = []
+        self.devices.forEach { device in
+            if device.position == .back, let camera = SingleCameraView(device, "Back") {
+                cameras.append(camera)
+            }
+            else if device.position == .front, let camera = SingleCameraView(device, "Front") {
+                cameras.append(camera)
+            }
+            else if let camera = SingleCameraView(device, "Unknown") {
+                cameras.append(camera)
+            }
+        }
+        return cameras
     }
     
-    private func setupDevice() {
-        let deviceDiscoverySession = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInWideAngleCamera], mediaType: .video, position: .unspecified)
+    @objc private func nextCamera() {
+        let cameraIndex = (self.cameraIndex + 1) % self.cameras.count
         
-        let devices = deviceDiscoverySession.devices
+        guard self.cameraIndex != cameraIndex else { return }
         
-        devices.forEach { device in
-            if device.position == .back {
-                self.backCamera = device
-            }
-            else if device.position == .front {
-                self.frontCamera = device
-            }
-            
-            self.currentCamera = self.backCamera
+        if self.cameraIndex >= 0 {
+            self.cameras[self.cameraIndex].disconnect()
         }
-    }
-    
-    private func setupInputOutput() {
-        do {
-            let captureDeviceInput = try AVCaptureDeviceInput(device: currentCamera!)
-            self.captureSession.addInput(captureDeviceInput)
-            self.photoOutput.setPreparedPhotoSettingsArray([AVCapturePhotoSettings(format: [AVVideoCodecKey: AVVideoCodecType.jpeg])], completionHandler: nil)
-            self.captureSession.addOutput(self.photoOutput)
-        }
-        catch {
-            print(error)
-        }
+        self.photoOutput = self.cameras[cameraIndex].connect()
+        
+        self.cameraIndex = cameraIndex
     }
 }
 
 extension CameraView {
     override func didLoad() {
-        self.setupDevice()
-        self.setupCaptureSession()
-        self.setupInputOutput()
+        self.cameras.forEach { camera in
+            self.addSubview(camera)
+        }
         
-        self.layer.insertSublayer(self.cameraPreviewLayer, at: 0)
-    }
-    
-    override func willAppear() {
-        self.captureSession.startRunning()
-        self.cameraPreviewLayer.connection?.isEnabled = true
-    }
-    
-    override func didDisappear() {
-        self.captureSession.stopRunning()
-        self.cameraPreviewLayer.connection?.isEnabled = false
+        self.nextCamera()
     }
 }
