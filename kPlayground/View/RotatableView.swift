@@ -39,10 +39,12 @@ internal class RotatableView: View {
 }
 
 extension RotatableView {
+    override func didLoad() {
+        self.orientationDidChange()
+    }
+    
     override func didAppear() {
         NotificationCenter.default.addObserver(self, selector: #selector(self.orientationDidChange), name: .UIDeviceOrientationDidChange, object: nil)
-        
-        self.orientationDidChange()
     }
     
     override func didDisappear() {

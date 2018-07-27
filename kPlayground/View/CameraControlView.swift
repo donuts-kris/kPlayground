@@ -68,7 +68,8 @@ class CameraControlView: AutoRotateView {
 extension CameraControlView {
     
     override func didLoad() {
-
+        super.didLoad()
+        
         self.addSubview(self.captureButton)
         self.captureButton.snp.makeConstraints { make in
             make.centerX.equalToSuperview()

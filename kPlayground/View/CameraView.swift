@@ -36,6 +36,15 @@ class CameraView: View {
             self?.photoOutput.capturePhoto(with: AVCapturePhotoSettings(), delegate: viewModel)
         }
         
+        disposable += viewModel.source.producer.observe(on: UIScheduler()).startWithValues { [weak self] value in
+            if value == .back {
+                return
+            }
+            
+            self?.currentCamera = self?.frontCamera
+            self?.setupInputOutput()
+        }
+        
         return disposable
     }
     

@@ -16,8 +16,9 @@ class CameraViewController: ViewController {
         return CameraViewModel()
     }()
     
-    private lazy var cameraView = {
-        return CameraView(frame: CGRect(x: 0, y: 0, width: 375, height: 667))
+    //todo
+    private lazy var cameraView : CameraView = {
+        return CameraView()//(frame: CGRect.screenIgnoreOrientation)
     }()
     
     private lazy var cameraControlView = {
