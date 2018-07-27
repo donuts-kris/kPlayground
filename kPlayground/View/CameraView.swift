@@ -25,18 +25,19 @@ class CameraView: View {
     
     private var photoOutput: AVCapturePhotoOutput?
     
-    private var cameraIndex = -1
+    private var cameraIndex = 0
 
     func bind(_ viewModel: CameraViewModel) -> Disposable {
         let disposable = CompositeDisposable()
         
         disposable += viewModel.captureButtonPressed.values.observe(on: UIScheduler()).observeValues { [weak self] in
+            
             self?.photoOutput?.capturePhoto(with: AVCapturePhotoSettings(), delegate: viewModel)
         }
         
         disposable += viewModel.switchButtonPressed.values.observe(on: UIScheduler()).observeValues { [weak self] in
             guard let sSelf = self else { return }
-            sSelf.nextCamera()
+            sSelf.switchCamera()
             viewModel.source.swap(sSelf.cameras[sSelf.cameraIndex].name)
         }
         
@@ -61,17 +62,44 @@ class CameraView: View {
         return cameras
     }
     
-    @objc private func nextCamera() {
-        let cameraIndex = (self.cameraIndex + 1) % self.cameras.count
+    @objc private func switchCamera() {
         
+        let cameraIndex = (self.cameraIndex + 1) % self.cameras.count
         guard self.cameraIndex != cameraIndex else { return }
         
-        if self.cameraIndex >= 0 {
-            self.cameras[self.cameraIndex].disconnect()
-        }
-        self.photoOutput = self.cameras[cameraIndex].connect()
+        let previousCamera = self.disconnectCamera()
         
         self.cameraIndex = cameraIndex
+        
+        let nextCamera = self.connectCamera()
+        
+        self.animate(previousCamera, nextCamera)
+    }
+    
+    private func disconnectCamera() -> SingleCameraView? {
+        guard self.cameraIndex >= 0 && self.cameraIndex < self.cameras.count else { return nil }
+        
+        let camera = self.cameras[self.cameraIndex]
+        camera.disconnect()
+        
+        return camera
+    }
+    
+    private func connectCamera() -> SingleCameraView? {
+        guard self.cameraIndex >= 0 && self.cameraIndex < self.cameras.count else { return nil }
+
+        let camera = self.cameras[self.cameraIndex]
+        self.photoOutput = camera.connect()
+        
+        return camera
+    }
+    
+    private func animate(_ previousCamera : SingleCameraView?, _ nextCamera : SingleCameraView?) {
+        guard let previousCamera = previousCamera, let nextCamera = nextCamera else { return }
+        let transitionOptions: UIViewAnimationOptions = [.transitionFlipFromRight, .showHideTransitionViews]
+            
+        UIView.transition(with: previousCamera, duration: 0.6, options: transitionOptions, animations: nil)
+        UIView.transition(with: nextCamera, duration: 0.6, options: transitionOptions, animations: nil)
     }
 }
 
@@ -81,6 +109,6 @@ extension CameraView {
             self.addSubview(camera)
         }
         
-        self.nextCamera()
+        _ = self.connectCamera()
     }
 }

@@ -22,10 +22,10 @@ internal class RotatableView: View {
             orientationDidChangePortraitUpsideDown()
             
         case .landscapeLeft:
-            orientationDidChangeLandscapeLeft()
+            orientationDidChangeLandscapeRight()
             
         case .landscapeRight:
-            orientationDidChangeLandscapeRight()
+            orientationDidChangeLandscapeLeft()
             
         default:
             break

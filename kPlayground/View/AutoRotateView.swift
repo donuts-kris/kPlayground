@@ -58,7 +58,7 @@ extension AutoRotateView {
     
     internal override func orientationDidChangeLandscapeLeft() {
         UIView.animate(withDuration: animatingDuration) {
-            self.transform = CGAffineTransform(rotationAngle: CGFloat.pi/2)
+            self.transform = CGAffineTransform(rotationAngle: -CGFloat.pi/2)
             
             self.makeContraintsLandscape()
         }
@@ -66,7 +66,7 @@ extension AutoRotateView {
     
     internal override func orientationDidChangeLandscapeRight() {
         UIView.animate(withDuration: animatingDuration) {
-            self.transform = CGAffineTransform(rotationAngle: -CGFloat.pi/2)
+            self.transform = CGAffineTransform(rotationAngle: CGFloat.pi/2)
             
             self.makeContraintsLandscape()
         }

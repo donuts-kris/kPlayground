@@ -10,7 +10,7 @@ import UIKit
 import AVFoundation
 import ReactiveSwift
 
-class SingleCameraView: View {
+class SingleCameraView: RotatableView {
 
     private var _name = "Unknown"
     
@@ -53,14 +53,15 @@ class SingleCameraView: View {
             guard self.session.canAddInput(input) else { return nil }
             self.session.addInput(input)
             
-            guard self.session.canAddOutput(photoOutput) else { return nil }
-            self.session.addOutput(photoOutput)
+            guard self.session.canAddOutput(self.photoOutput) else { return nil }
+            self.session.addOutput(self.photoOutput)
         }
         catch {
             return nil
         }
         
         self.layer.insertSublayer(self.previewLayer, at: 0)
+        self.connect()
         self.disconnect()
     }
     
@@ -70,6 +71,8 @@ class SingleCameraView: View {
         
         self.isHidden = false
         
+        print("\(name) : connect")
+        
         return self.photoOutput
     }
     
@@ -78,5 +81,25 @@ class SingleCameraView: View {
         self.previewLayer.connection?.isEnabled = false
         
         self.isHidden = true
+        
+         print("\(name) : disconnect")
+    }
+}
+
+extension SingleCameraView {
+    override func orientationDidChangePortrait() {
+        self.photoOutput.connection(with: .video)?.videoOrientation = .portrait
+    }
+    
+    override func orientationDidChangePortraitUpsideDown() {
+        self.photoOutput.connection(with: .video)?.videoOrientation = .portraitUpsideDown
+    }
+    
+    override func orientationDidChangeLandscapeLeft() {
+        self.photoOutput.connection(with: .video)?.videoOrientation = .landscapeLeft
+    }
+    
+    override func orientationDidChangeLandscapeRight() {
+        self.photoOutput.connection(with: .video)?.videoOrientation = .landscapeRight
     }
 }
