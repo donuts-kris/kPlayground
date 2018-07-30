@@ -94,10 +94,6 @@ fileprivate class KDebugView: View {
             
             self.textView.text = self.textView.text + message
             
-            if self.superview == nil || self.textView.superview == nil {
-                return
-            }
-            
             self.scrollToBottom()
             
             self.wake()
@@ -125,8 +121,10 @@ fileprivate class KDebugView: View {
     }
     
     private func remakeConstraints() {
+        guard self.superview != nil && self.textView.superview != nil else { return }
+        
         self.snp.remakeConstraints { make in
-            guard self.superview != nil else { return }
+            //guard self.superview != nil else { return }
             make.left.equalToSuperview()
             make.right.equalToSuperview()
             make.top.equalToSuperview()
@@ -134,7 +132,7 @@ fileprivate class KDebugView: View {
         }
         
         self.textView.snp.remakeConstraints { make in
-            guard self.textView.superview != nil else { return }
+            //guard self.textView.superview != nil else { return }
             make.left.equalToSuperview()
             make.right.equalToSuperview()
             make.top.equalToSuperview()

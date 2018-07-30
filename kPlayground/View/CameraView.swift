@@ -19,8 +19,20 @@ class CameraView: View {
         return deviceDiscoverySession.devices
     }()
     
-    private lazy var cameras = {
-        return self.findCameras()
+    private lazy var cameras: [SingleCameraView] = {
+        var cameras: [SingleCameraView] = []
+        self.devices.forEach { device in
+            if device.position == .back, let camera = SingleCameraView(device, "Back") {
+                cameras.append(camera)
+            }
+            else if device.position == .front, let camera = SingleCameraView(device, "Front") {
+                cameras.append(camera)
+            }
+            else if let camera = SingleCameraView(device, "Unknown") {
+                cameras.append(camera)
+            }
+        }
+        return cameras
     }()
     
     private var photoOutput: AVCapturePhotoOutput?
@@ -35,6 +47,8 @@ class CameraView: View {
             if viewModel.mode.value == .photo {
                 self?.photoOutput?.capturePhoto(with: AVCapturePhotoSettings(), delegate: viewModel)
             }
+            
+            
         }
         
         disposable += viewModel.switchButtonPressed.values.observe(on: UIScheduler()).observeValues { [weak self] in
@@ -46,22 +60,6 @@ class CameraView: View {
         viewModel.source.swap(self.cameras[self.cameraIndex].name)
         
         return disposable
-    }
-    
-    private func findCameras() -> [SingleCameraView] {
-        var cameras: [SingleCameraView] = []
-        self.devices.forEach { device in
-            if device.position == .back, let camera = SingleCameraView(device, "Back") {
-                cameras.append(camera)
-            }
-            else if device.position == .front, let camera = SingleCameraView(device, "Front") {
-                cameras.append(camera)
-            }
-            else if let camera = SingleCameraView(device, "Unknown") {
-                cameras.append(camera)
-            }
-        }
-        return cameras
     }
     
     @objc private func switchCamera() {
