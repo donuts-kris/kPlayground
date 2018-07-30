@@ -12,13 +12,7 @@ import ReactiveSwift
 
 class SingleCameraView: RotatableView {
 
-    private var _name = "Unknown"
-    
-    var name: String {
-        get {
-            return self._name
-        }
-    }
+    private(set) public var name = "Unknown"
     
     private lazy var session: AVCaptureSession = {
         let session = AVCaptureSession()
@@ -40,12 +34,10 @@ class SingleCameraView: RotatableView {
         return previewLayer
     }()
     
-    convenience init?(_ device: AVCaptureDevice, _ name: String?) {
+    convenience init?(_ device: AVCaptureDevice, _ name: String) {
         self.init()
         
-        if let name = name {
-            self._name = name
-        }
+        self.name = name
 
         do {
             let input = try AVCaptureDeviceInput(device: device)
