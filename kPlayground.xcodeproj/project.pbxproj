@@ -13,6 +13,7 @@
 		5952CE2D21081CFF0050F038 /* AutoRotateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5952CE2C21081CFF0050F038 /* AutoRotateView.swift */; };
 		5952CE30210847300050F038 /* CameraViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5952CE2F210847300050F038 /* CameraViewModel.swift */; };
 		5952CE3221085C8F0050F038 /* PhotoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5952CE3121085C8F0050F038 /* PhotoViewController.swift */; };
+		596064FB210EA76A005A5EBB /* KDebug.swift in Sources */ = {isa = PBXBuildFile; fileRef = 596064FA210EA76A005A5EBB /* KDebug.swift */; };
 		59684E932105797800914A10 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59684E922105797800914A10 /* AppDelegate.swift */; };
 		59684E952105797800914A10 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59684E942105797800914A10 /* ViewController.swift */; };
 		59684E9A2105797800914A10 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 59684E992105797800914A10 /* Assets.xcassets */; };
@@ -53,6 +54,7 @@
 		5952CE2C21081CFF0050F038 /* AutoRotateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoRotateView.swift; sourceTree = "<group>"; };
 		5952CE2F210847300050F038 /* CameraViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewModel.swift; sourceTree = "<group>"; };
 		5952CE3121085C8F0050F038 /* PhotoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoViewController.swift; sourceTree = "<group>"; };
+		596064FA210EA76A005A5EBB /* KDebug.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KDebug.swift; sourceTree = "<group>"; };
 		59684E8F2105797800914A10 /* kPlayground.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = kPlayground.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		59684E922105797800914A10 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		59684E942105797800914A10 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -138,6 +140,14 @@
 			path = ViewModel;
 			sourceTree = "<group>";
 		};
+		596064F9210EA743005A5EBB /* Class */ = {
+			isa = PBXGroup;
+			children = (
+				596064FA210EA76A005A5EBB /* KDebug.swift */,
+			);
+			path = Class;
+			sourceTree = "<group>";
+		};
 		59684E862105797700914A10 = {
 			isa = PBXGroup;
 			children = (
@@ -163,6 +173,7 @@
 		59684E912105797800914A10 /* kPlayground */ = {
 			isa = PBXGroup;
 			children = (
+				596064F9210EA743005A5EBB /* Class */,
 				597077D22106F73A00CBC5C3 /* Protocol */,
 				5975E040210AA7CC00DEEB56 /* Extension */,
 				5952CE2E210847030050F038 /* ViewModel */,
@@ -461,6 +472,7 @@
 				597077D82107019A00CBC5C3 /* RotatableView.swift in Sources */,
 				5975E042210AA84500DEEB56 /* CGRectExtension.swift in Sources */,
 				5925C2AD210978330029134F /* View.swift in Sources */,
+				596064FB210EA76A005A5EBB /* KDebug.swift in Sources */,
 				5952CE3221085C8F0050F038 /* PhotoViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

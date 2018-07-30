@@ -32,7 +32,9 @@ class CameraView: View {
         
         disposable += viewModel.captureButtonPressed.values.observe(on: UIScheduler()).observeValues { [weak self] in
             
-            self?.photoOutput?.capturePhoto(with: AVCapturePhotoSettings(), delegate: viewModel)
+            if viewModel.mode.value == .photo {
+                self?.photoOutput?.capturePhoto(with: AVCapturePhotoSettings(), delegate: viewModel)
+            }
         }
         
         disposable += viewModel.switchButtonPressed.values.observe(on: UIScheduler()).observeValues { [weak self] in

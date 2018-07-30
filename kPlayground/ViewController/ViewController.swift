@@ -14,7 +14,7 @@ internal class ViewController: UIViewController {
     
     private static let LOG_INFO: [LogInfo] = [.viewWillAppear, .deinitialize]
     
-    internal var disposable = CompositeDisposable()
+    internal let disposable = CompositeDisposable()
     
     internal var longDescription: String {
         return super.description

@@ -11,7 +11,7 @@ import ReactiveSwift
 
 internal class View: UIView {
 
-    private let disposable = CompositeDisposable()
+    internal let disposable = CompositeDisposable()
     
     private lazy var isOverriddenDidLoad = {
         return class_getInstanceMethod(object_getClass(self), #selector(self.didLoad)) != class_getInstanceMethod(View.self, #selector(View.didLoad))
