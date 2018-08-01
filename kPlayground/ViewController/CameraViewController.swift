@@ -59,13 +59,11 @@ class CameraViewController: ViewController {
     }
     
     internal var supportedModes: [CaptureMode] {
-        return [.video, .photo]
-        //return [.photo, .video]
+        return [.photo, .video]
     }
     
     internal var supportedCameras: [AVCaptureDevice.Position] {
-        //return [.front]
-        return [.back]//, .front, .unspecified]
+        return [.back, .front, .unspecified]
     }
 }
 
