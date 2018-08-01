@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import AVKit
 import AVFoundation
 import ReactiveSwift
 
@@ -46,9 +47,12 @@ class CameraViewController: ViewController {
         
         disposable += viewModel.videoSignal.observe(on: UIScheduler()).observeValues { [weak self] value in
             guard let value = value else { return }
-            
-            let viewController = VideoViewController(value)
-            self?.present(viewController, animated: true)
+
+            let viewController = AVPlayerViewController()
+            viewController.player = AVPlayer(url: value)
+            self?.present(viewController, animated: true) {
+                viewController.player!.play()
+            }
         }
         
         return disposable
@@ -61,7 +65,7 @@ class CameraViewController: ViewController {
     
     internal var supportedCameras: [AVCaptureDevice.Position] {
         //return [.front]
-        return [.back, .front, .unspecified]
+        return [.back]//, .front, .unspecified]
     }
 }
 

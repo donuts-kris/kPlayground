@@ -51,19 +51,6 @@ class SingleCameraView: View {
         return layer
     }()
     
-    private static var orientation: AVCaptureVideoOrientation {
-        switch UIDevice.current.orientation {
-        case .landscapeLeft:
-            return .landscapeRight
-        case .landscapeRight:
-            return .landscapeLeft
-        case .portraitUpsideDown:
-            return .portraitUpsideDown
-        default:
-            return .portrait
-        }
-    }
-    
     init(_ device: AVCaptureDevice) {
         self.position = device.position
         

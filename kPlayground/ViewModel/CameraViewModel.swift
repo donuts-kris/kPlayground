@@ -48,7 +48,7 @@ class CameraViewModel: NSObject {
         
         self.mode = MutableProperty<CaptureMode>(supportedModes.count > 0 ? supportedModes[0] : .none)
         
-        if supportedCameras.count == 0 {
+        if self.supportedCameras.count == 0 {
             self.supportedCameras.append(.back)
         }
         
@@ -73,13 +73,12 @@ extension CameraViewModel: AVCapturePhotoCaptureDelegate {
 
 extension CameraViewModel: AVCaptureFileOutputRecordingDelegate {
     func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
-        print("fileOutput")
-        
-        guard error != nil else {
+
+        guard error == nil else {
             self.videoObserver.send(value: nil)
             return
         }
-        
+
         self.videoObserver.send(value: outputFileURL)
     }
 }
