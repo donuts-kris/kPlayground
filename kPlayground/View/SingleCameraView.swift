@@ -11,7 +11,7 @@ import AVFoundation
 import ReactiveSwift
 
 class SingleCameraView: View {
-    private(set) var name = "Other"
+    private(set) var position: AVCaptureDevice.Position
     
     private lazy var session: AVCaptureSession = {
         let session = AVCaptureSession()
@@ -19,28 +19,36 @@ class SingleCameraView: View {
     }()
     
     private var cameraInput: AVCaptureDeviceInput!
-    private var microphoneInput: AVCaptureDeviceInput!
     
-    private lazy var photoOutput: AVCapturePhotoOutput = {
-        let output = AVCapturePhotoOutput()
-        output.setPreparedPhotoSettingsArray([AVCapturePhotoSettings(format: [AVVideoCodecKey: AVVideoCodecType.jpeg])], completionHandler: nil)
-        return output
-    }()
-    
-    private lazy var videoOutput: AVCaptureMovieFileOutput = {
-        let output = AVCaptureMovieFileOutput()
-        if let connection = output.connection(with: .video), connection.isVideoStabilizationSupported {
-            connection.preferredVideoStabilizationMode = .auto
+    private lazy var microphoneInput: AVCaptureDeviceInput! = {
+        let microphone = AVCaptureDevice.default(for: .audio)
+        do {
+            return try AVCaptureDeviceInput(device: microphone!)
         }
-        return output
+        catch {
+            return nil
+        }
     }()
     
+    lazy var photo: PhotoCaptureDevice = {
+        let device = PhotoCaptureDevice()
+        device.inputs.append(self.cameraInput)
+        return device
+    }()
+    
+    lazy var video: VideoCaptureDevice = {
+        let device = VideoCaptureDevice()
+        device.inputs.append(self.cameraInput)
+        device.inputs.append(self.microphoneInput)
+        return device
+    }()
+
     private lazy var previewLayer: AVCaptureVideoPreviewLayer = {
-        let previewLayer = AVCaptureVideoPreviewLayer(session: self.session)
-        previewLayer.videoGravity = .resizeAspectFill
-        previewLayer.connection?.videoOrientation = .portrait
-        previewLayer.frame = self.frame
-        return previewLayer
+        let layer = AVCaptureVideoPreviewLayer(session: self.session)
+        layer.videoGravity = .resizeAspectFill
+        layer.connection?.videoOrientation = .portrait
+        layer.frame = self.frame
+        return layer
     }()
     
     private static var orientation: AVCaptureVideoOrientation {
@@ -56,41 +64,24 @@ class SingleCameraView: View {
         }
     }
     
-    init?(_ device: AVCaptureDevice, _ name: String) {
-        self.name = name
+    init(_ device: AVCaptureDevice) {
+        self.position = device.position
         
         super.init()
         
-        if device.isSmoothAutoFocusSupported {
-            do {
+        do {
+            if device.isSmoothAutoFocusSupported {
                 try device.lockForConfiguration()
                 device.isSmoothAutoFocusEnabled = false
                 device.unlockForConfiguration()
             }
-            catch {
-            }
-        }
-        
-        do {
+            
             self.cameraInput = try AVCaptureDeviceInput(device: device)
         }
         catch {
-            return nil
-        }
-        
-        if self.session.canAddInput(cameraInput) {
-            self.session.addInput(cameraInput)
+            print("\(error.localizedDescription)")
         }
 
-        let microphone = AVCaptureDevice.default(for: .audio)
-        
-        do {
-            microphoneInput = try AVCaptureDeviceInput(device: microphone!)
-        }
-        catch {
-            return nil
-        }
-        
         self.layer.insertSublayer(self.previewLayer, at: 0)
         
         self.setActive(true)
@@ -103,17 +94,9 @@ class SingleCameraView: View {
     
     func bind(_ viewModel: CameraViewModel) -> Disposable {
         let disposable = CompositeDisposable()
-        
+
         disposable += viewModel.mode.producer.observe(on: UIScheduler()).startWithValues { [weak self] value in
-            guard let sSelf = self else { return }
-            
-            switch value {
-            case .photo:
-                sSelf.changeModeToPhoto()
-                
-            case .video:
-                sSelf.changeModeToVideo()
-            }
+            self?.changeMode(to: value)
         }
         
         return disposable
@@ -136,62 +119,39 @@ class SingleCameraView: View {
         self.isHidden = !active
     }
     
-    func capturePhoto(delegate: AVCapturePhotoCaptureDelegate) {
-        if let connection = videoOutput.connection(with: .video), connection.isVideoOrientationSupported {
-            connection.videoOrientation = SingleCameraView.orientation
+    private func changeMode(to mode: CaptureMode) {
+        var inputs: [AVCaptureInput]
+        var output: AVCaptureOutput
+        
+        switch mode {
+        case .photo:
+            inputs = photo.inputs
+            output = photo.output
+            
+        case .video:
+            inputs = video.inputs
+            output = video.output
+            
+        case .none:
+            return
         }
         
-        self.photoOutput.capturePhoto(with: AVCapturePhotoSettings(), delegate: delegate)
-    }
-    
-    func startRecording(delegate: AVCaptureFileOutputRecordingDelegate) {
-        guard !videoOutput.isRecording else { return }
-        
-        if let connection = videoOutput.connection(with: .video), connection.isVideoOrientationSupported {
-            connection.videoOrientation = SingleCameraView.orientation
+        for input in self.session.inputs {
+            self.session.removeInput(input)
         }
         
-        if let outputURL = self.tempURL() {
-            self.videoOutput.startRecording(to: outputURL, recordingDelegate: delegate)
-        }
-    }
-    
-    func stopRecording() {
-        guard videoOutput.isRecording else { return }
-        
-        videoOutput.stopRecording()
-    }
-    
-    private func tempURL() -> URL? {
-        let directory = NSTemporaryDirectory() as NSString
-        
-        if directory != "" {
-            let path = directory.appendingPathComponent(NSUUID().uuidString + ".mp4")
-            return URL(fileURLWithPath: path)
+        for output in self.session.outputs {
+            self.session.removeOutput(output)
         }
         
-        return nil
-    }
-    
-    
-    private func changeModeToPhoto() {
-        self.session.removeInput(self.microphoneInput)
-        self.session.removeOutput(self.videoOutput)
-        
-        if session.canAddOutput(self.photoOutput) {
-            session.addOutput(self.photoOutput)
+        for input in inputs {
+            if self.session.canAddInput(input) {
+                self.session.addInput(input)
+            }
         }
-    }
-    
-    private func changeModeToVideo() {
-        self.session.removeOutput(self.photoOutput)
-        
-        if self.session.canAddInput(self.microphoneInput) {
-            session.addInput(self.microphoneInput)
-        }
-        
-        if session.canAddOutput(self.videoOutput) {
-            session.addOutput(self.videoOutput)
+
+        if self.session.canAddOutput(output) {
+            self.session.addOutput(output)
         }
     }
 }

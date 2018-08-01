@@ -12,16 +12,19 @@ import ReactiveSwift
 
 class CameraViewController: ViewController {
     
-    private lazy var viewModel = {
-        return CameraViewModel()
+    private lazy var viewModel: CameraViewModel = {
+        let viewModel = CameraViewModel(self.supportedModes, self.supportedCameras)
+        return viewModel
     }()
     
-    private lazy var cameraView = {
-        return CameraView()
+    private lazy var cameraView: CameraView = {
+        let view = CameraView()
+        return view
     }()
     
-    private lazy var cameraControlView = {
-        return CameraControlView()
+    private lazy var cameraControlView: CameraControlView = {
+        let view = CameraControlView()
+        return view
     }()
     
     private func bind(_ viewModel: CameraViewModel) -> Disposable {
@@ -50,16 +53,27 @@ class CameraViewController: ViewController {
         
         return disposable
     }
+    
+    internal var supportedModes: [CaptureMode] {
+        return [.video, .photo]
+        //return [.photo, .video]
+    }
+    
+    internal var supportedCameras: [AVCaptureDevice.Position] {
+        //return [.front]
+        return [.back, .front, .unspecified]
+    }
 }
 
 extension CameraViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.disposable += self.bind(self.viewModel)
+        
         self.view.addSubview(self.cameraView)
         self.view.addSubview(self.cameraControlView)
         
-        self.disposable += self.bind(self.viewModel)
     }
     
     override var shouldAutorotate: Bool {

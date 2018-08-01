@@ -15,8 +15,11 @@ class CameraViewModel: NSObject {
     let (photoSignal, photoObserver) = Signal<UIImage?, NoError>.pipe()
     let (videoSignal, videoObserver) = Signal<URL?, NoError>.pipe()
     
-    let mode = MutableProperty<CaptureMode>(.photo)
-    let source = MutableProperty<String>("Unknown")
+    var supportedModes: [CaptureMode]
+    var supportedCameras: [AVCaptureDevice.Position]
+    
+    var mode: MutableProperty<CaptureMode>
+    var position: MutableProperty<AVCaptureDevice.Position>
     
     let recording = MutableProperty<Bool>(false)
 
@@ -37,6 +40,22 @@ class CameraViewModel: NSObject {
             return SignalProducer(value: value)
         }
     }()
+    
+    init(_ supportedModes: [CaptureMode], _ supportedCameras: [AVCaptureDevice.Position]) {
+        
+        self.supportedModes = supportedModes
+        self.supportedCameras = supportedCameras
+        
+        self.mode = MutableProperty<CaptureMode>(supportedModes.count > 0 ? supportedModes[0] : .none)
+        
+        if supportedCameras.count == 0 {
+            self.supportedCameras.append(.back)
+        }
+        
+        self.position = MutableProperty<AVCaptureDevice.Position>(self.supportedCameras[0])
+        
+        super.init()
+    }
 }
 
 extension CameraViewModel: AVCapturePhotoCaptureDelegate {
@@ -62,16 +81,5 @@ extension CameraViewModel: AVCaptureFileOutputRecordingDelegate {
         }
         
         self.videoObserver.send(value: outputFileURL)
-    }
-}
-
-extension CameraViewModel {
-    
-    enum CaptureMode: String {
-        case photo = "Photo", video = "Video"
-        
-        mutating func toggle() {
-            self = (self == .photo) ? .video : .photo
-        }
     }
 }

@@ -49,8 +49,8 @@ class CameraControlView: AutoRotateView {
             self?.modeButton.setTitle(value.rawValue, for: .normal)
         }
         
-        disposable += viewModel.source.producer.observe(on: UIScheduler()).startWithValues { [weak self] value in
-            self?.switchButton.setTitle(value, for: .normal)
+        disposable += viewModel.position.producer.observe(on: UIScheduler()).startWithValues { [weak self] value in
+            self?.switchButton.setTitle(value.stringValue, for: .normal)
         }
         
         disposable += viewModel.recording.producer.observe(on: UIScheduler()).startWithValues { [weak self] value in
@@ -62,7 +62,12 @@ class CameraControlView: AutoRotateView {
         }
         
         disposable += self.modeButton.reactive.controlEvents(.touchDown).observe(on: UIScheduler()).observeValues { _ in
-            viewModel.mode.value.toggle()
+            
+            let value = viewModel.mode.value
+            
+            guard value != value.toggle(), viewModel.supportedModes.contains(value.toggle()) else { return }
+            
+            viewModel.mode.swap(value.toggle())
         }
 
         return disposable

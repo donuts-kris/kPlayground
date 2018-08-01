@@ -19,32 +19,30 @@ class CameraView: View {
         return deviceDiscoverySession.devices
     }()
     
-    private lazy var cameras: [SingleCameraView] = {
-        var cameras: [SingleCameraView] = []
-        self.devices.forEach { device in
-            if device.position == .back, let camera = SingleCameraView(device, "Back") {
-                cameras.append(camera)
-            }
-            else if device.position == .front, let camera = SingleCameraView(device, "Front") {
-                cameras.append(camera)
-            }
-            else if let camera = SingleCameraView(device, "Unknown") {
-                cameras.append(camera)
-            }
-        }
-        return cameras
-    }()
+    private var cameras: [SingleCameraView] = []
     
     private var cameraIndex = 0
     
-    private var activeCamera: SingleCameraView? {
+    private var camera: SingleCameraView? {
         guard self.cameraIndex >= 0 && self.cameraIndex < self.cameras.count else { return nil }
 
         return self.cameras[self.cameraIndex]
     }
 
+    private func setupCameras(_ supportedModes: [CaptureMode], _ supportedPositions: [AVCaptureDevice.Position]) {
+        self.devices
+            .filter { device in supportedPositions.contains(device.position) }
+            .sorted { device1, device2 in supportedPositions.index(of: device1.position)! < supportedPositions.index(of: device2.position)! }
+            .forEach { device in
+                let camera = SingleCameraView(device)
+                cameras.append(camera)
+        }
+    }
+    
     func bind(_ viewModel: CameraViewModel) -> Disposable {
         let disposable = CompositeDisposable()
+        
+        self.setupCameras(viewModel.supportedModes, viewModel.supportedCameras)
         
         self.cameras.forEach { camera in
             disposable += camera.bind(viewModel)
@@ -52,48 +50,55 @@ class CameraView: View {
         
         disposable += viewModel.captureButtonPressed.values.throttle(1.0, on: QueueScheduler.main).observe(on: UIScheduler()).observeValues { [weak self] in
             
+            guard let camera = self?.camera else { return }
+            
             switch viewModel.mode.value {
             case .photo:
-                self?.activeCamera?.capturePhoto(delegate: viewModel)
+                camera.photo.capture(delegate: viewModel)
 
             case .video:
                 viewModel.recording.swap(!viewModel.recording.value)
+                
+            case .none:
+                break
             }
         }
         
-        disposable += viewModel.recording.producer.observe(on: UIScheduler()).startWithValues { [weak self] value in
+        disposable += viewModel.recording.signal.observe(on: UIScheduler()).observeValues { [weak self] value in
             
-            guard let camera = self?.activeCamera else { return }
+            guard let camera = self?.camera else { return }
             
             if value {
-                camera.startRecording(delegate: viewModel)
+                camera.video.capture(delegate: viewModel)
             }
             else {
-                camera.stopRecording()
+                camera.video.endCapture()
             }
         }
         
-        disposable += viewModel.switchButtonPressed.values.observe(on: UIScheduler()).observeValues { [weak self] in
-            guard let sSelf = self, let currentCamera = sSelf.activeCamera else { return }
+        disposable += viewModel.switchButtonPressed.values.throttle(1.0, on: QueueScheduler.main).observe(on: UIScheduler()).observeValues { [weak self] in
+            guard let sSelf = self else { return }
             
             sSelf.switchCamera()
-            viewModel.source.swap(currentCamera.name)
+            
+            if let position = sSelf.camera?.position {
+                viewModel.position.swap(position)
+            }
         }
         
         return disposable
     }
     
     @objc private func switchCamera() {
-        
         let cameraIndex = (self.cameraIndex + 1) % self.cameras.count
         guard self.cameraIndex != cameraIndex else { return }
         
-        let previousCamera = self.activeCamera
+        let previousCamera = self.camera
         previousCamera?.setActive(false)
         
         self.cameraIndex = cameraIndex
         
-        let camera = self.activeCamera
+        let camera = self.camera
         camera?.setActive(true)
         
         guard let firstView = previousCamera, let secondView = camera else { return }
@@ -114,6 +119,6 @@ extension CameraView {
             self.addSubview(camera)
         }
         
-        self.activeCamera?.setActive(true)
+        self.camera?.setActive(true)
     }
 }

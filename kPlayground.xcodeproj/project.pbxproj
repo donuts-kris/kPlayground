@@ -24,6 +24,11 @@
 		597077CD2106B11600CBC5C3 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 597077CC2106B11600CBC5C3 /* CameraView.swift */; };
 		597077D42106F7CE00CBC5C3 /* CameraControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 597077D32106F7CE00CBC5C3 /* CameraControlView.swift */; };
 		597077D82107019A00CBC5C3 /* RotatableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 597077D72107019A00CBC5C3 /* RotatableView.swift */; };
+		5975042021114CDE001CBC03 /* CaptureMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5975041F21114CDE001CBC03 /* CaptureMode.swift */; };
+		5975042221115060001CBC03 /* PositionExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5975042121115060001CBC03 /* PositionExtension.swift */; };
+		5975042421117426001CBC03 /* PhotoCaptureDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5975042321117426001CBC03 /* PhotoCaptureDevice.swift */; };
+		5975042621117842001CBC03 /* VideoCaptureDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5975042521117842001CBC03 /* VideoCaptureDevice.swift */; };
+		59750428211187B5001CBC03 /* UIDeviceExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59750427211187B5001CBC03 /* UIDeviceExtension.swift */; };
 		5975E042210AA84500DEEB56 /* CGRectExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5975E041210AA84500DEEB56 /* CGRectExtension.swift */; };
 		5975E044210ACC3C00DEEB56 /* SingleCameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5975E043210ACC3C00DEEB56 /* SingleCameraView.swift */; };
 		5995AEB3210FFAA600820A6E /* VideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5995AEB2210FFAA600820A6E /* VideoViewController.swift */; };
@@ -72,6 +77,11 @@
 		597077CC2106B11600CBC5C3 /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
 		597077D32106F7CE00CBC5C3 /* CameraControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraControlView.swift; sourceTree = "<group>"; };
 		597077D72107019A00CBC5C3 /* RotatableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RotatableView.swift; sourceTree = "<group>"; };
+		5975041F21114CDE001CBC03 /* CaptureMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureMode.swift; sourceTree = "<group>"; };
+		5975042121115060001CBC03 /* PositionExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PositionExtension.swift; sourceTree = "<group>"; };
+		5975042321117426001CBC03 /* PhotoCaptureDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCaptureDevice.swift; sourceTree = "<group>"; };
+		5975042521117842001CBC03 /* VideoCaptureDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCaptureDevice.swift; sourceTree = "<group>"; };
+		59750427211187B5001CBC03 /* UIDeviceExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIDeviceExtension.swift; sourceTree = "<group>"; };
 		5975E041210AA84500DEEB56 /* CGRectExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CGRectExtension.swift; sourceTree = "<group>"; };
 		5975E043210ACC3C00DEEB56 /* SingleCameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleCameraView.swift; sourceTree = "<group>"; };
 		5995AEB2210FFAA600820A6E /* VideoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoViewController.swift; sourceTree = "<group>"; };
@@ -146,6 +156,8 @@
 			isa = PBXGroup;
 			children = (
 				596064FA210EA76A005A5EBB /* KDebug.swift */,
+				5975042321117426001CBC03 /* PhotoCaptureDevice.swift */,
+				5975042521117842001CBC03 /* VideoCaptureDevice.swift */,
 			);
 			path = Class;
 			sourceTree = "<group>";
@@ -175,6 +187,7 @@
 		59684E912105797800914A10 /* kPlayground */ = {
 			isa = PBXGroup;
 			children = (
+				5975041E21114CBA001CBC03 /* Enum */,
 				596064F9210EA743005A5EBB /* Class */,
 				597077D22106F73A00CBC5C3 /* Protocol */,
 				5975E040210AA7CC00DEEB56 /* Extension */,
@@ -222,8 +235,8 @@
 			isa = PBXGroup;
 			children = (
 				5925C2AC210978330029134F /* View.swift */,
-				5975E043210ACC3C00DEEB56 /* SingleCameraView.swift */,
 				597077CC2106B11600CBC5C3 /* CameraView.swift */,
+				5975E043210ACC3C00DEEB56 /* SingleCameraView.swift */,
 				597077D32106F7CE00CBC5C3 /* CameraControlView.swift */,
 				597077D72107019A00CBC5C3 /* RotatableView.swift */,
 				5952CE2C21081CFF0050F038 /* AutoRotateView.swift */,
@@ -238,10 +251,20 @@
 			path = Protocol;
 			sourceTree = "<group>";
 		};
+		5975041E21114CBA001CBC03 /* Enum */ = {
+			isa = PBXGroup;
+			children = (
+				5975041F21114CDE001CBC03 /* CaptureMode.swift */,
+			);
+			path = Enum;
+			sourceTree = "<group>";
+		};
 		5975E040210AA7CC00DEEB56 /* Extension */ = {
 			isa = PBXGroup;
 			children = (
 				5975E041210AA84500DEEB56 /* CGRectExtension.swift */,
+				5975042121115060001CBC03 /* PositionExtension.swift */,
+				59750427211187B5001CBC03 /* UIDeviceExtension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -468,12 +491,17 @@
 				59684E952105797800914A10 /* ViewController.swift in Sources */,
 				59684E932105797800914A10 /* AppDelegate.swift in Sources */,
 				5952CE2D21081CFF0050F038 /* AutoRotateView.swift in Sources */,
+				59750428211187B5001CBC03 /* UIDeviceExtension.swift in Sources */,
+				5975042021114CDE001CBC03 /* CaptureMode.swift in Sources */,
 				5952CE30210847300050F038 /* CameraViewModel.swift in Sources */,
 				5975E044210ACC3C00DEEB56 /* SingleCameraView.swift in Sources */,
 				597077CD2106B11600CBC5C3 /* CameraView.swift in Sources */,
 				59684EC32105A73000914A10 /* CameraViewController.swift in Sources */,
 				597077D82107019A00CBC5C3 /* RotatableView.swift in Sources */,
+				5975042421117426001CBC03 /* PhotoCaptureDevice.swift in Sources */,
 				5995AEB3210FFAA600820A6E /* VideoViewController.swift in Sources */,
+				5975042621117842001CBC03 /* VideoCaptureDevice.swift in Sources */,
+				5975042221115060001CBC03 /* PositionExtension.swift in Sources */,
 				5975E042210AA84500DEEB56 /* CGRectExtension.swift in Sources */,
 				5925C2AD210978330029134F /* View.swift in Sources */,
 				596064FB210EA76A005A5EBB /* KDebug.swift in Sources */,
