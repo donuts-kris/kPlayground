@@ -33,10 +33,18 @@ internal class View: UIView {
         return class_getInstanceMethod(object_getClass(self), #selector(self.didDisappear)) != class_getInstanceMethod(View.self, #selector(View.didDisappear))
     }()
     
-    convenience init() {
-        self.init(frame: CGRect.screenIgnoreOrientation)
+    internal init() {
+        super.init(frame: CGRect.screenIgnoreOrientation)
+    }
+    
+    override internal init(frame: CGRect) {
+        super.init(frame: frame)
     }
 
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     deinit {
         self.disposable.dispose()
     }

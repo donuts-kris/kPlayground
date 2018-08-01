@@ -13,10 +13,13 @@ import ReactiveSwift
 
 class CameraViewModel: NSObject {
     let (photoSignal, photoObserver) = Signal<UIImage?, NoError>.pipe()
+    let (videoSignal, videoObserver) = Signal<URL?, NoError>.pipe()
     
     let mode = MutableProperty<CaptureMode>(.photo)
     let source = MutableProperty<String>("Unknown")
     
+    let recording = MutableProperty<Bool>(false)
+
     lazy var captureButtonPressed: Action<Void, Void, NoError> = {
         return Action { value in
             return SignalProducer(value: value)
@@ -46,6 +49,19 @@ extension CameraViewModel: AVCapturePhotoCaptureDelegate {
         }
         
         self.photoObserver.send(value: image)
+    }
+}
+
+extension CameraViewModel: AVCaptureFileOutputRecordingDelegate {
+    func fileOutput(_ output: AVCaptureFileOutput, didFinishRecordingTo outputFileURL: URL, from connections: [AVCaptureConnection], error: Error?) {
+        print("fileOutput")
+        
+        guard error != nil else {
+            self.videoObserver.send(value: nil)
+            return
+        }
+        
+        self.videoObserver.send(value: outputFileURL)
     }
 }
 

@@ -20,6 +20,7 @@ class FirstViewController: ViewController {
     
     @objc private func buttonClicked() {
         self.present(CameraViewController(), animated: true, completion: nil)
+        //self.present(TestViewController(), animated: true, completion: nil)
     }
 }
 

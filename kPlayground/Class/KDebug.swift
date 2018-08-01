@@ -11,7 +11,7 @@ import ReactiveSwift
 
 @objc class KDebug : NSObject {
     
-    public static let shared = {
+    static let shared = {
         return KDebug()
     }()
     
@@ -47,8 +47,8 @@ fileprivate class KDebugView: View {
         return textView
     }()
     
-    fileprivate init() {
-        super.init(frame: CGRect.screen)
+    override fileprivate init() {
+        super.init()
         
         self.layer.zPosition = .greatestFiniteMagnitude
         self.addSubview(self.textView)

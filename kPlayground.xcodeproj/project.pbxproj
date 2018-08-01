@@ -26,6 +26,7 @@
 		597077D82107019A00CBC5C3 /* RotatableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 597077D72107019A00CBC5C3 /* RotatableView.swift */; };
 		5975E042210AA84500DEEB56 /* CGRectExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5975E041210AA84500DEEB56 /* CGRectExtension.swift */; };
 		5975E044210ACC3C00DEEB56 /* SingleCameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5975E043210ACC3C00DEEB56 /* SingleCameraView.swift */; };
+		5995AEB3210FFAA600820A6E /* VideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5995AEB2210FFAA600820A6E /* VideoViewController.swift */; };
 		6598B4C88FF649985CF1BE94 /* Pods_kPlaygroundTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B590C77BA0E30A20FBB2F671 /* Pods_kPlaygroundTests.framework */; };
 /* End PBXBuildFile section */
 
@@ -73,6 +74,7 @@
 		597077D72107019A00CBC5C3 /* RotatableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RotatableView.swift; sourceTree = "<group>"; };
 		5975E041210AA84500DEEB56 /* CGRectExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CGRectExtension.swift; sourceTree = "<group>"; };
 		5975E043210ACC3C00DEEB56 /* SingleCameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleCameraView.swift; sourceTree = "<group>"; };
+		5995AEB2210FFAA600820A6E /* VideoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoViewController.swift; sourceTree = "<group>"; };
 		662898F5676DA59DD044625D /* Pods-kPlaygroundUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-kPlaygroundUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-kPlaygroundUITests/Pods-kPlaygroundUITests.release.xcconfig"; sourceTree = "<group>"; };
 		734FB30E06B5C87DD2A6A7E1 /* Pods-kPlaygroundUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-kPlaygroundUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-kPlaygroundUITests/Pods-kPlaygroundUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		7A9B1CA02ADEE6F653F861B1 /* Pods-kPlayground.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-kPlayground.release.xcconfig"; path = "Pods/Target Support Files/Pods-kPlayground/Pods-kPlayground.release.xcconfig"; sourceTree = "<group>"; };
@@ -211,6 +213,7 @@
 				59684EC021057C7A00914A10 /* FirstViewController.swift */,
 				59684EC22105A73000914A10 /* CameraViewController.swift */,
 				5952CE3121085C8F0050F038 /* PhotoViewController.swift */,
+				5995AEB2210FFAA600820A6E /* VideoViewController.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -470,6 +473,7 @@
 				597077CD2106B11600CBC5C3 /* CameraView.swift in Sources */,
 				59684EC32105A73000914A10 /* CameraViewController.swift in Sources */,
 				597077D82107019A00CBC5C3 /* RotatableView.swift in Sources */,
+				5995AEB3210FFAA600820A6E /* VideoViewController.swift in Sources */,
 				5975E042210AA84500DEEB56 /* CGRectExtension.swift in Sources */,
 				5925C2AD210978330029134F /* View.swift in Sources */,
 				596064FB210EA76A005A5EBB /* KDebug.swift in Sources */,

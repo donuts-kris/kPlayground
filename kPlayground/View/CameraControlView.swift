@@ -16,7 +16,6 @@ class CameraControlView: AutoRotateView {
     private lazy var captureButton: UIButton = {
         let button = UIButton()
         button.setTitle("o", for: .normal)
-        button.setTitleColor(.white, for: .normal)
         return button
     }()
     
@@ -46,12 +45,20 @@ class CameraControlView: AutoRotateView {
         self.switchButton.reactive.pressed = CocoaAction(viewModel.switchButtonPressed)
         self.closeButton.reactive.pressed = CocoaAction(viewModel.closeButtonPressed)
         
-        disposable += viewModel.mode.producer.observe(on: UIScheduler()).skipRepeats().startWithValues { [weak self] value in
+        disposable += viewModel.mode.producer.observe(on: UIScheduler()).startWithValues { [weak self] value in
             self?.modeButton.setTitle(value.rawValue, for: .normal)
         }
         
-        disposable += viewModel.source.producer.observe(on: UIScheduler()).skipRepeats().startWithValues { [weak self] value in
+        disposable += viewModel.source.producer.observe(on: UIScheduler()).startWithValues { [weak self] value in
             self?.switchButton.setTitle(value, for: .normal)
+        }
+        
+        disposable += viewModel.recording.producer.observe(on: UIScheduler()).startWithValues { [weak self] value in
+            self?.captureButton.setTitleColor(value ? .red : .white, for: .normal)
+            
+            self?.modeButton.isUserInteractionEnabled = !value
+            self?.switchButton.isUserInteractionEnabled = !value
+            self?.closeButton.isUserInteractionEnabled = !value
         }
         
         disposable += self.modeButton.reactive.controlEvents(.touchDown).observe(on: UIScheduler()).observeValues { _ in
